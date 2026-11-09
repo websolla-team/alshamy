@@ -186,6 +186,49 @@ body { color: var(--alshamy-ink); }
 }
 .alshamy-products { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 
+.alshamy-addon {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-block: 0 14px;
+    padding: 14px;
+    background: #ede1d1;
+    border: 1px solid #d8bfa5;
+    border-radius: 14px;
+}
+.alshamy-addon__intro { min-width: 0; }
+.alshamy-addon__intro strong { color: var(--alshamy-ink); font-size: 16px; }
+.alshamy-addon__intro p {
+    margin: 4px 0 0;
+    color: var(--alshamy-muted);
+    font-size: 13px;
+    line-height: 1.55;
+}
+.alshamy-addon__tag {
+    display: inline-block;
+    margin-inline-end: 8px;
+    padding: 2px 8px;
+    border-radius: 7px;
+    background: var(--alshamy-brown);
+    color: #fff;
+    font-size: 11px;
+}
+.alshamy-addon__prices { display: flex; flex-wrap: wrap; gap: 7px; }
+.alshamy-addon__prices span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 5px 11px;
+    border: 1px solid #c9a780;
+    border-radius: 8px;
+    background: #fffaf3;
+    color: var(--alshamy-ink);
+    font-size: 13px;
+    font-weight: 700;
+}
+
 .alshamy-menu-card {
     display: grid;
     grid-template-columns: 76px minmax(0, 1fr);

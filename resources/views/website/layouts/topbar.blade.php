@@ -1,16 +1,6 @@
 @php
-    $contactPhone = preg_replace('/[^\d+]/', '', $Contact?->phone1 ?? '');
-    $whatsappValue = trim($Contact?->whatsapp ?? '');
-    $whatsappUrl = null;
-    if (preg_match('~^https://(?:wa\.me/|api\.whatsapp\.com/send(?:\?|/))~i', $whatsappValue)) {
-        $whatsappUrl = $whatsappValue;
-    } elseif (preg_match('/^\+?[\d\s()-]{9,20}$/', $whatsappValue)) {
-        $whatsappDigits = preg_replace('/\D/', '', $whatsappValue);
-        if (str_starts_with($whatsappDigits, '0')) {
-            $whatsappDigits = '20' . substr($whatsappDigits, 1);
-        }
-        $whatsappUrl = 'https://wa.me/' . $whatsappDigits;
-    }
+    $contactHref = \App\Http\Controllers\Front\ContactLinks::telephone($Contact?->phone1);
+    $whatsappUrl = \App\Http\Controllers\Front\ContactLinks::whatsapp($Contact?->whatsapp);
 @endphp
 
 <header class="alshamy-topbar">
@@ -25,9 +15,9 @@
         </div>
 
         <nav class="alshamy-topbar__actions" aria-label="التواصل مع الشامي">
-            @if ($contactPhone)
+            @if ($contactHref)
                 <a class="alshamy-topbar__action alshamy-topbar__action--call"
-                   href="tel:{{ $contactPhone }}" aria-label="اتصل بالشامي">
+                   href="{{ $contactHref }}" aria-label="اتصل بالشامي">
                     <i class="fa-solid fa-phone" aria-hidden="true"></i><span>اتصل</span>
                 </a>
             @endif

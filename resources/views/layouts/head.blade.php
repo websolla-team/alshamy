@@ -18,3 +18,13 @@
 <!---Skinmodes css-->
 <link href="{{ URL::asset('assets/css/skin-modes.css') }}" rel="stylesheet">
 <script src="{{ asset('assets/vendor/ckeditor5/ckeditor.js') }}"></script>
+<style>
+    /* The legacy icon CSS requests an absent EOT file. Prefer the bundled WOFF. */
+    @font-face {
+        font-family: 'simple-line-icons';
+        src: url("{{ URL::asset('assets/plugins/simple-line-icons/fonts/Simple-Line-Icons.woff') }}") format('woff');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+    }
+</style>

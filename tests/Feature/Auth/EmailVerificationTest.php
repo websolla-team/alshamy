@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
+use Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect;
 use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
@@ -16,6 +17,8 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_verification_screen_can_be_rendered(): void
     {
+        $this->withoutVite();
+        $this->withoutMiddleware(LocaleSessionRedirect::class);
         $user = User::factory()->create([
             'email_verified_at' => null,
         ]);
@@ -27,6 +30,7 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_can_be_verified(): void
     {
+        $this->withoutMiddleware(LocaleSessionRedirect::class);
         $user = User::factory()->create([
             'email_verified_at' => null,
         ]);
@@ -48,6 +52,7 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_is_not_verified_with_invalid_hash(): void
     {
+        $this->withoutMiddleware(LocaleSessionRedirect::class);
         $user = User::factory()->create([
             'email_verified_at' => null,
         ]);

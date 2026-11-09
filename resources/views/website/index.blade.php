@@ -5,7 +5,8 @@
 
 @section('content')
     @php
-        $orderPhone = preg_replace('/[^\d+]/', '', $Contact?->phone1 ?? '');
+        $orderPhoneHref = \App\Http\Controllers\Front\ContactLinks::telephone($Contact?->phone1);
+        $orderWhatsApp = \App\Http\Controllers\Front\ContactLinks::whatsapp($Contact?->whatsapp);
     @endphp
 
     <main id="menu-categories" class="alshamy-menu-page">
@@ -41,6 +42,22 @@
                                      id="pills-{{ $category->id }}" role="tabpanel"
                                      aria-labelledby="pills-{{ $category->id }}-tab" tabindex="0">
                                 <h2 class="alshamy-category-title">{{ $category->title }}</h2>
+                                @foreach ($addonsBySection->get($category->getTranslation('title', 'ar', false), collect()) as $addon)
+                                    @if (count($addon['choices']) > 0)
+                                        <aside class="alshamy-addon" aria-label="إضافة {{ $addon['name'] }}">
+                                            <div class="alshamy-addon__intro">
+                                                <span class="alshamy-addon__tag">إضافة للبيتزا</span>
+                                                <strong>{{ $addon['name'] }}</strong>
+                                                <p>إضافة اختيارية للبيتزا — السعر بيتضاف على سعر البيتزا الأساسي.</p>
+                                            </div>
+                                            <div class="alshamy-addon__prices" aria-label="أسعار الإضافة حسب الحجم">
+                                                @foreach ($addon['choices'] as $choice)
+                                                    <span><bdi>{{ $choice['size'] }} +{{ $choice['price'] }} جنيه</bdi></span>
+                                                @endforeach
+                                            </div>
+                                        </aside>
+                                    @endif
+                                @endforeach
                                 <div class="alshamy-products">
                                     @foreach ($category->products as $product)
                                         @php
@@ -48,6 +65,8 @@
                                             $hasPrice = $firstVariant && (float) $firstVariant->price > 0;
                                             $showOldPrice = $hasPrice && (float) $firstVariant->old_price > (float) $firstVariant->price;
                                             $description = trim(strip_tags(html_entity_decode((string) $product->description)));
+                                            $orderMessage = 'السلام عليكم، عايز أطلب ' . $product->name
+                                                . ($firstVariant?->size ? ' - ' . $firstVariant->size : '') . '.';
                                         @endphp
                                         <article class="alshamy-menu-card" data-product-id="{{ $product->id }}">
                                             <div class="alshamy-menu-card__image">
@@ -80,6 +99,7 @@
                                                             <label class="alshamy-size-chip">
                                                                 <input type="radio" name="size-{{ $product->id }}"
                                                                        value="{{ $variant->id }}"
+                                                                       data-size="{{ $variant->size }}"
                                                                        data-price="{{ $variant->price }}"
                                                                        data-old-price="{{ $variant->old_price }}"
                                                                        {{ $loop->first ? 'checked' : '' }}>
@@ -92,22 +112,20 @@
                                                 <div class="alshamy-menu-card__bottom">
                                                     <div class="alshamy-menu-card__prices">
                                                         <strong class="alshamy-menu-card__price" aria-live="polite">
-                                                            @if ($hasPrice)
-                                                                <bdi>{{ $firstVariant->price }} جنيه</bdi>
-                                                            @else
-                                                                السعر عند الطلب
-                                                            @endif
+                                                            <bdi>{{ $hasPrice ? $firstVariant->price . ' جنيه' : 'السعر عند الطلب' }}</bdi>
                                                         </strong>
                                                         <del class="alshamy-menu-card__old-price"
                                                              @unless ($showOldPrice) hidden @endunless>
-                                                            @if ($showOldPrice)<bdi>{{ $firstVariant->old_price }} جنيه</bdi>@endif
+                                                            <bdi>@if ($showOldPrice){{ $firstVariant->old_price }} جنيه@endif</bdi>
                                                         </del>
                                                     </div>
                                                     <a class="alshamy-menu-card__order"
-                                                       href="{{ $orderPhone ? 'tel:' . $orderPhone : route('contacts') }}"
-                                                       aria-label="{{ $orderPhone ? 'اتصل لطلب' : 'تواصل لطلب' }} {{ $product->name }}">
-                                                        {{ $orderPhone ? 'اتصل للطلب' : 'تواصل للطلب' }}
-                                                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                                                       href="{{ $orderWhatsApp ? $orderWhatsApp . '?text=' . rawurlencode($orderMessage) : ($orderPhoneHref ?: route('contacts')) }}"
+                                                       @if ($orderWhatsApp) data-whatsapp-base="{{ $orderWhatsApp }}"
+                                                       data-product-name="{{ $product->name }}" target="_blank" rel="noopener noreferrer" @endif
+                                                       aria-label="{{ $orderWhatsApp ? 'اطلب عبر واتساب' : ($orderPhoneHref ? 'اتصل لطلب' : 'تواصل لطلب') }} {{ $product->name }}">
+                                                        {{ $orderWhatsApp ? 'اطلب عبر واتساب' : ($orderPhoneHref ? 'اتصل للطلب' : 'تواصل للطلب') }}
+                                                        <i class="{{ $orderWhatsApp ? 'fa-brands fa-whatsapp' : 'fa-solid fa-phone' }}" aria-hidden="true"></i>
                                                     </a>
                                                 </div>
                                             </div>
@@ -125,6 +143,29 @@
 
 @section('js')
     <script>
+        const categoryTabs = Array.from(document.querySelectorAll('#pills-tab [data-bs-toggle="pill"]'));
+        const activateLinkedCategory = () => {
+            const matchingTab = categoryTabs.find((tab) =>
+                '#' + tab.getAttribute('aria-controls') === window.location.hash
+            );
+            if (matchingTab && window.bootstrap?.Tab) {
+                window.bootstrap.Tab.getOrCreateInstance(matchingTab).show();
+                matchingTab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            }
+        };
+
+        categoryTabs.forEach((tab) => {
+            tab.addEventListener('shown.bs.tab', () => {
+                const hash = '#' + tab.getAttribute('aria-controls');
+                if (window.location.hash !== hash) {
+                    window.history.replaceState(null, '', hash);
+                }
+                tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            });
+        });
+        activateLinkedCategory();
+        window.addEventListener('hashchange', activateLinkedCategory);
+
         document.querySelectorAll('.alshamy-size-picker').forEach((picker) => {
             picker.addEventListener('change', (event) => {
                 if (!event.target.matches('input[type="radio"]')) return;
@@ -132,13 +173,21 @@
                 const card = event.target.closest('.alshamy-menu-card');
                 const price = Number(event.target.dataset.price);
                 const oldPrice = Number(event.target.dataset.oldPrice);
-                const display = card.querySelector('.alshamy-menu-card__price');
+                const display = card.querySelector('.alshamy-menu-card__price bdi');
                 const oldDisplay = card.querySelector('.alshamy-menu-card__old-price');
                 const money = (amount) => amount.toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' جنيه';
 
                 display.textContent = Number.isFinite(price) && price > 0 ? money(price) : 'السعر عند الطلب';
                 oldDisplay.hidden = !(Number.isFinite(oldPrice) && oldPrice > price && price > 0);
-                oldDisplay.textContent = oldDisplay.hidden ? '' : money(oldPrice);
+                oldDisplay.querySelector('bdi').textContent = oldDisplay.hidden ? '' : money(oldPrice);
+
+                const orderLink = card.querySelector('[data-whatsapp-base]');
+                if (orderLink) {
+                    const size = event.target.dataset.size?.trim();
+                    const message = 'السلام عليكم، عايز أطلب ' + orderLink.dataset.productName
+                        + (size ? ' - ' + size : '') + '.';
+                    orderLink.href = orderLink.dataset.whatsappBase + '?text=' + encodeURIComponent(message);
+                }
             });
         });
     </script>

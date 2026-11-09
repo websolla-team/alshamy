@@ -25,6 +25,7 @@
 
     </div>
     @include('website.layouts.footer-scripts')
+    @unless (request()->routeIs('home'))
     <script>
         $(document).ready(function() {
             var url = window.location.href;
@@ -34,6 +35,7 @@
             }).addClass('active');
         });
     </script>
+    @endunless
 </body>
 
 </html>

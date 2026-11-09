@@ -5,6 +5,9 @@
 @section('css')
 @endsection
 @section('content')
+    @php
+        $contactPagePhoneHref = \App\Http\Controllers\Front\ContactLinks::telephone($Contact?->phone1);
+    @endphp
 
  <div class="breadcumb-section">
         <div class="breadcumb-wrapper">
@@ -41,15 +44,21 @@
                     <div class="col-md-6 col-xl-3">
                         <div class="contact-box style1">
                             <div class="contact-icon"><img src="{{ asset('website/assets/img/icon/gmail.png')}}" alt="icon"></div>
-                            <h3 class="title">{{ $Contact->email }}</h3>
+                            <h3 class="title">@if ($Contact?->email)<a href="mailto:{{ $Contact->email }}">{{ $Contact->email }}</a>@endif</h3>
 
                         </div>
                     </div>
                     <div class="col-md-6 col-xl-3">
                         <div class="contact-box style1">
                             <div class="contact-icon"><img src="{{ asset('website/assets/img/icon/phone.png')}}" alt="icon"></div>
-                            <h3 class="title"><a href="tel:{{ preg_replace('/[^\d+]/', '', $Contact?->phone1 ?? '') }}">{{ $Contact?->phone1 }}</a></h3>
-                            <p>{{ $Contact->phone2 }}.</p>
+                            <h3 class="title">
+                                @if ($contactPagePhoneHref)
+                                    <a href="{{ $contactPagePhoneHref }}">{{ $Contact?->phone1 }}</a>
+                                @else
+                                    {{ $Contact?->phone1 }}
+                                @endif
+                            </h3>
+                            <p>{{ $Contact?->phone2 }}</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-xl-3">
@@ -79,21 +88,33 @@
                             <h2>{{ __('main.get in touch') }}</h2>
                               <form action="{{ route('contact.mail') }}" method="POST">
                             @csrf
+                                @if ($errors->any())
+                                    <p role="alert" class="text-danger">فيه بيانات ناقصة أو مش صحيحة. راجع الحقول وحاول تاني.</p>
+                                @endif
                                 <div class="col-md-12">
-                                    <input type="text" name="name" placeholder="{{ __('main.name') }}">
+                                    <label class="visually-hidden" for="contact-name">{{ __('main.name') }}</label>
+                                    <input id="contact-name" type="text" name="name" autocomplete="name" required
+                                           value="{{ old('name') }}" placeholder="{{ __('main.name') }}">
                                 </div>
                                 <div class="col-md-12">
-                                    <input type="email" name="email" placeholder="{{ __('main.email') }}">
+                                    <label class="visually-hidden" for="contact-email">{{ __('main.email') }}</label>
+                                    <input id="contact-email" type="email" name="email" autocomplete="email" required
+                                           value="{{ old('email') }}" placeholder="{{ __('main.email') }}">
                                 </div>
                                 <div class="col-md-12">
-                                    <input type="number"name="phone" placeholder="{{ __('main.phone') }}">
+                                    <label class="visually-hidden" for="contact-phone">{{ __('main.phone') }}</label>
+                                    <input id="contact-phone" type="tel" name="phone" autocomplete="tel" required
+                                           value="{{ old('phone') }}" placeholder="{{ __('main.phone') }}">
                                 </div>
                                 <div class="col-md-12">
-                                 <input type="text"name="subject" placeholder="{{ __('main.subject') }}">
+                                    <label class="visually-hidden" for="contact-subject">{{ __('main.subject') }}</label>
+                                    <input id="contact-subject" type="text" name="subject" required
+                                           value="{{ old('subject') }}" placeholder="{{ __('main.subject') }}">
                                 </div>
                                 <div class="col-12">
-                                    <textarea id="message" name="message"  class="form-control" placeholder="{{ __('main.message') }}"
-                                        rows="5"></textarea>
+                                    <label class="visually-hidden" for="contact-message">{{ __('main.message') }}</label>
+                                    <textarea id="contact-message" name="message" class="form-control" required
+                                              placeholder="{{ __('main.message') }}" rows="5">{{ old('message') }}</textarea>
                                 </div>
 
                                 <div class="col-12 form-group mb-0">
@@ -123,5 +144,4 @@
 
     <!-- end/information -->
 @endsection
-@section('js')
 

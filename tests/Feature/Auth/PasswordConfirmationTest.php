@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect;
 use Tests\TestCase;
 
 class PasswordConfirmationTest extends TestCase
@@ -12,6 +13,8 @@ class PasswordConfirmationTest extends TestCase
 
     public function test_confirm_password_screen_can_be_rendered(): void
     {
+        $this->withoutVite();
+        $this->withoutMiddleware(LocaleSessionRedirect::class);
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get('/confirm-password');

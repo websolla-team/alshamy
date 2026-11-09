@@ -1,0 +1,1118 @@
+[
+  {
+    "category": "وجبات الشامي",
+    "items": [
+      {
+        "name": "وجبه ورك شوايه",
+        "priceText": "EGP 100 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "100",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه وركين شوايه",
+        "priceText": "EGP 170 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "170",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه كريسبي 8 قطع",
+        "priceText": "EGP 185 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "185",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه كريسبي 4 قطع",
+        "priceText": "EGP 120 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "120",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه صدر شوايه",
+        "priceText": "EGP 120 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "120",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه سبايسي 8 قطع",
+        "priceText": "EGP 185 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "185",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه سبايسي 6 قطع",
+        "priceText": "EGP 155 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "155",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه سبايسي 4 قطع",
+        "priceText": "EGP 120 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "120",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه ورك بروستد",
+        "priceText": "EGP 100 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "100",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه كفته فراخ",
+        "priceText": "EGP 120 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "120",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه فاهيتا",
+        "priceText": "EGP 185 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "185",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه شيش عالفحم",
+        "priceText": "EGP 155 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "155",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه صدر بروستد",
+        "priceText": "EGP 125 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "125",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه ريش",
+        "priceText": "EGP 240 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "240",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه توشكا",
+        "priceText": "EGP 0 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "0",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نص كبده اسكندراني",
+        "priceText": "EGP 220 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "220",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه مندي",
+        "priceText": "EGP 315 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "315",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "شاورما الشامي",
+    "items": [
+      {
+        "name": "وجبه ماريا",
+        "priceText": "EGP 110 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "110",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه شاورما ميكس",
+        "priceText": "EGP 160 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "160",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه شاورما فراخ عربي",
+        "priceText": "EGP 100 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "100",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه شاورما فرط فراخ",
+        "priceText": "EGP 120 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "120",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه شاورما لحمه عربي",
+        "priceText": "EGP 195 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "195",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه شاورما عربي فراخ عائلي",
+        "priceText": "EGP 195 -",
+        "variants": [
+          {
+            "size": "صغير",
+            "price": "195",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نصف كيلو شاورما فراخ",
+        "priceText": "EGP 275 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "275",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "فته شاورما ميكس",
+        "priceText": "EGP 100 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "100",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "فته شاورما فراخ",
+        "priceText": "EGP 100 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "100",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش شاورما لحم صاج",
+        "priceText": "EGP 100 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "100",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش شاورما فراخ",
+        "priceText": "EGP 60 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "60",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش شاورما فراخ فينو",
+        "priceText": "EGP 80 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "80",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "سندوتشات الشامي",
+    "items": [
+      {
+        "name": "سندوتش شيش ع الفحم",
+        "priceText": "EGP 65 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "65",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش فرانشيسكو",
+        "priceText": "EGP 75 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "75",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سنوتش كباب",
+        "priceText": "EGP 95 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "95",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش كريسبي",
+        "priceText": "EGP 80 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "80",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش كفته فراخ",
+        "priceText": "EGP 75 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "75",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش كبده اسكندراني",
+        "priceText": "EGP 75 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "75",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش شاورما لحمه فينو",
+        "priceText": "EGP 80 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "80",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش سبايسي",
+        "priceText": "EGP 80 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "80",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش زنجر",
+        "priceText": "EGP 80 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "80",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش بطاطس بالجبنه عيش سوري",
+        "priceText": "EGP 0 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "0",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش بطاطس بالحبنه",
+        "priceText": "EGP 43 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "43",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "تشيكن سبايسي",
+        "priceText": "EGP 80 -",
+        "variants": [
+          {
+            "size": "صغير",
+            "price": "80",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "برجر لحم",
+        "priceText": "EGP 90 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "90",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "تشيكن تشيز الشامي",
+        "priceText": "EGP 95 -",
+        "variants": [
+          {
+            "size": "صغير",
+            "price": "95",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "تشيكن الشامي",
+        "priceText": "EGP 165 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "165",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سندوتش بطاطس فينو",
+        "priceText": "EGP 35 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "35",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "دجاج الشامي",
+    "items": [
+      {
+        "name": "نص فرخه مشويه",
+        "priceText": "EGP 175 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "175",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نص فرخه بروستد وركين",
+        "priceText": "EGP 190 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "190",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نص فرخه شوايه بدون ارز",
+        "priceText": "EGP 175 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "175",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نصف فرخه ع الفحم",
+        "priceText": "EGP 180 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "180",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "بيتزا الشامي",
+    "items": []
+  },
+  {
+    "category": "مشويات",
+    "items": [
+      {
+        "name": "وجبه كفته لحم",
+        "priceText": "EGP 190 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "190",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه مخاصي ع الفحم",
+        "priceText": "EGP 0 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "0",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه مشاوي اكسترا",
+        "priceText": "EGP 350 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "350",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه مشاوي لارج",
+        "priceText": "EGP 250 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "250",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه مشاوي مشكل",
+        "priceText": "EGP 180 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "180",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه كبده مشويه",
+        "priceText": "EGP 220 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "220",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه كبده اسكندراني",
+        "priceText": "EGP 220 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "220",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه كباب",
+        "priceText": "EGP 220 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "220",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "وجبه ستيك",
+        "priceText": "EGP 220 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "220",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "مندي",
+        "priceText": "EGP 315 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "315",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "مشاوي بالكيلو",
+    "items": [
+      {
+        "name": "نص كيلو مشاوي مشكل",
+        "priceText": "EGP 290 -",
+        "variants": [
+          {
+            "size": "صغير",
+            "price": "290",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نصف كيلو ريش",
+        "priceText": "EGP 440 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "440",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نصف كيلو ستيك",
+        "priceText": "EGP 375 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "375",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نصف كيلو شيش",
+        "priceText": "EGP 215 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "215",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "نص شيش",
+        "priceText": "EGP 215 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "215",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "معجنات",
+    "items": [
+      {
+        "name": "وجبه صفيحه",
+        "priceText": "EGP 180 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "180",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "موتزريلا",
+        "priceText": "EGP 20 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "20",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "مكسيكي",
+        "priceText": "EGP 40 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "40",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "محمره مع موزريلا",
+        "priceText": "EGP 23 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "23",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "قرص صفيحه",
+        "priceText": "EGP 0 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "0",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "قرص محمر",
+        "priceText": "EGP 13 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "13",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "شيش مع موتزريلا",
+        "priceText": "EGP 50 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "50",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "شيش علي عجين",
+        "priceText": "EGP 40 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "40",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "شوكلاته",
+        "priceText": "EGP 17 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "17",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سنفوره",
+        "priceText": "EGP 20 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "20",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سجق",
+        "priceText": "EGP 50 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "50",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "زعتر ميكس",
+        "priceText": "EGP 23 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "23",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "جبنه شاميه",
+        "priceText": "EGP 19 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "19",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "توشكا بالموتزاريلا",
+        "priceText": "EGP 50 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "50",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "بيتزا سواريه",
+        "priceText": "EGP 20 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "20",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "زعتر",
+        "priceText": "EGP 15 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "15",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "طواجن",
+    "items": [
+      {
+        "name": "وجبه طاجن كباب هندي لحم",
+        "priceText": "EGP 195 -",
+        "variants": [
+          {
+            "size": "لارج",
+            "price": "195",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "مقبلات",
+    "items": [
+      {
+        "name": "متبل",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "فتوش",
+        "priceText": "EGP 30 -",
+        "variants": [
+          {
+            "size": "صغير",
+            "price": "30",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "كبه مشويه",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "كبه مقليه",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "كول سلو",
+        "priceText": "EGP 30 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "30",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "طبق ورق عنب",
+        "priceText": "EGP 35 -",
+        "variants": [
+          {
+            "size": "صغير",
+            "price": "35",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "شوربه لسان عصفور",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "شوربه عدس",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سلطه خضراء",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "سمبوسك جبنه",
+        "priceText": "EGP 20 -",
+        "variants": [
+          {
+            "size": "صغير",
+            "price": "20",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "حمص بالطحينه",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "جرجير",
+        "priceText": "EGP 30 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "30",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "توميه",
+        "priceText": "EGP 17 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "17",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "ارز بسمتي",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "تبوله",
+        "priceText": "EGP 30 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "30",
+            "oldPrice": "0"
+          }
+        ]
+      },
+      {
+        "name": "بابا غنوج",
+        "priceText": "EGP 25 -",
+        "variants": [
+          {
+            "size": "وسط",
+            "price": "25",
+            "oldPrice": "0"
+          }
+        ]
+      }
+    ]
+  }
+]

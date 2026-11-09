@@ -15,13 +15,31 @@
 
 <!--Internal  Perfect-scrollbar js -->
 <script src="{{URL::asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
-<script src="{{URL::asset('assets/plugins/perfect-scrollbar/p-scroll.js')}}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof PerfectScrollbar !== 'function') return;
+        ['.chat-scroll', '.Notification-scroll'].forEach(function (selector) {
+            const element = document.querySelector(selector);
+            if (element) {
+                new PerfectScrollbar(element, { useBothWheelAxes: true, suppressScrollX: true });
+            }
+        });
+    });
+</script>
 <!--Internal Sparkline js -->
 <script src="{{URL::asset('assets/plugins/jquery-sparkline/jquery.sparkline.min.js')}}"></script>
 <!-- Custom Scroll bar Js-->
 <script src="{{URL::asset('assets/plugins/mscrollbar/jquery.mCustomScrollbar.concat.min.js')}}"></script>
 <!-- right-sidebar js -->
-<script src="{{URL::asset('assets/plugins/sidebar/sidebar-rtl.js')}}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // The legacy plugin throws when this optional drawer is absent.
+        if (!document.querySelector('.sidebar-left')) return;
+        const sidebarPlugin = document.createElement('script');
+        sidebarPlugin.src = @json(URL::asset('assets/plugins/sidebar/sidebar-rtl.js'));
+        document.body.appendChild(sidebarPlugin);
+    });
+</script>
 <script src="{{URL::asset('assets/plugins/sidebar/sidebar-custom.js')}}"></script>
 <!-- Eva-icons js -->
 <script src="{{URL::asset('assets/js/eva-icons.min.js')}}"></script>

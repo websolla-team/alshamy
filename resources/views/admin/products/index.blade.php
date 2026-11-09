@@ -24,6 +24,7 @@
         .admin-products .ap-table tbody tr:last-child td { border-bottom: 0; }
         .admin-products .ap-product { display: flex; align-items: center; gap: 12px; min-width: 200px; }
         .admin-products .ap-product img { width: 64px; height: 64px; flex: 0 0 64px; border-radius: 9px; object-fit: cover; background: #f0f2f6; }
+        .admin-products .ap-photo-fallback { display: inline-grid; place-items: center; width: 64px; height: 64px; flex: 0 0 64px; border-radius: 9px; background: #f5ecdf; color: #78471f; font-size: .9rem; font-weight: 700; }
         .admin-products .ap-name { display: block; font-weight: 700; color: #24334a; }
         .admin-products .ap-id { display: block; margin-top: 4px; color: #8791a3; font-size: .79rem; }
         .admin-products .ap-variants { display: flex; flex-direction: column; gap: 7px; min-width: 225px; }
@@ -118,7 +119,11 @@
                                 data-stock="{{ $stockStatus }}">
                                 <td>
                                     <div class="ap-product">
-                                        <img src="{{ asset($product->image) }}" alt="" loading="lazy" width="64" height="64">
+                                        @if ($product->image)
+                                            <img src="{{ asset($product->image) }}" alt="" loading="lazy" width="64" height="64">
+                                        @else
+                                            <span class="ap-photo-fallback" aria-hidden="true">الشامي</span>
+                                        @endif
                                         <div>
                                             <span class="ap-name">{{ $product->name }}</span>
                                             <span class="ap-id">رقم الصنف: {{ $product->id }}</span>

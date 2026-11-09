@@ -2,12 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Page;
-use App\Models\Contact;
-use App\Models\Setting;
-use App\Models\Information;
-use App\Models\CategoryType;
 use App\Models\Category;
+use App\Models\Contact;
+use App\Models\Page;
+use App\Models\Setting;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -29,15 +27,17 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFour();
 
-        View::composer('*', function ($view) {
-            $data = [
+        $this->app->scoped('alshamy.shared_view_data', static function () {
+            return [
                 'Contact' => Contact::first(),
                 'About' => Page::first(),
                 'Setting' => Setting::first(),
                 'Pages' => Page::where('id', '!=', 1)->get(['id', 'title']),
                 'CategoryTypes' => Category::get(['id', 'title']),
             ];
-            $view->with($data);
+        });
+        View::composer('*', static function ($view) {
+            $view->with(app('alshamy.shared_view_data'));
         });
     }
 }

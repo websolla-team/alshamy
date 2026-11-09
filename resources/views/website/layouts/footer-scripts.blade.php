@@ -1,5 +1,21 @@
-
-
+@if (request()->routeIs('home'))
+    <script src="{{ asset('website/assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        const backToTop = document.getElementById('back-top');
+        if (backToTop) {
+            const updateBackToTop = () => {
+                backToTop.classList.toggle('show', window.scrollY > 20);
+            };
+            window.addEventListener('scroll', updateBackToTop, { passive: true });
+            updateBackToTop();
+            backToTop.addEventListener('click', () => {
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+            });
+        }
+    </script>
+    @yield('js')
+@else
     <!--<< All JS Plugins >>-->
     <script src="{{asset('website/assets/js/jquery-3.7.1.min.js')}}"></script>
     <!--<< Bootstrap Js >>-->
@@ -377,3 +393,4 @@ $(document).on('click', '.add-to-cart-details', function(e) {
 @endif
 
 @yield('js')
+@endif

@@ -1,5 +1,8 @@
 
 
+    @php
+        $footerPhoneHref = \App\Http\Controllers\Front\ContactLinks::telephone($Contact?->phone1);
+    @endphp
     <!-- Footer Section    S T A R T -->
     <footer class="footer-section bg-title fix">
         <div class="footer-widgets-wrapper">
@@ -25,7 +28,11 @@
                                 <div class="item1"><i class="fa-solid fa-envelope"></i></div>
                                 <div class="item2">
                                     <h6>{{ __('main.send an email') }}</h6>
-                                    <p>{{ $Contact->email }}</p>
+                                    <p>
+                                        @if ($Contact?->email)
+                                            <a href="mailto:{{ $Contact->email }}">{{ $Contact->email }}</a>
+                                        @endif
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -34,7 +41,13 @@
                                 <div class="item1"><i class="fa-regular fa-phone-volume"></i></div>
                                 <div class="item2">
                                     <h6>{{ __('main.call us') }}</h6>
-                                    <p><a href="tel:{{ preg_replace('/[^\d+]/', '', $Contact?->phone1 ?? '') }}">{{ $Contact?->phone1 }}</a></p>
+                                    <p>
+                                        @if ($footerPhoneHref)
+                                            <a href="{{ $footerPhoneHref }}">{{ $Contact?->phone1 }}</a>
+                                        @else
+                                            {{ $Contact?->phone1 }}
+                                        @endif
+                                    </p>
                                 </div>
                             </div>
                         </div>

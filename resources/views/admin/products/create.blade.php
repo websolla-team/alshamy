@@ -1,291 +1,181 @@
 @extends('layouts.master')
+
 @section('css')
-    <!-- Internal Data table css -->
-    <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('assets/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/datatable/css/jquery.dataTables.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('assets/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <style>
+        .product-editor { direction: rtl; text-align: right; max-width: 1200px; margin: 24px auto; }
+        .product-editor .editor-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+        .product-editor h1 { font-size: 1.6rem; font-weight: 700; color: #26354c; margin: 0; }
+        .product-editor .editor-panel { background: #fff; border: 1px solid #e1e7f0; border-radius: 12px; padding: 26px; margin-bottom: 20px; }
+        .product-editor h2 { font-size: 1.15rem; font-weight: 700; margin: 0 0 9px; }
+        .product-editor .editor-help { color: #66768d; margin: 0 0 18px; }
+        .product-editor .editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+        .product-editor .editor-field { min-width: 0; }
+        .product-editor .editor-field--full { grid-column: 1 / -1; }
+        .product-editor .editor-field label { display: block; margin-bottom: 7px; font-weight: 600; color: #314159; }
+        .product-editor .editor-field .form-control { min-height: 43px; border-radius: 7px; }
+        .product-editor .editor-field textarea.form-control { min-height: 95px; }
+        .product-editor .variant-row { display: grid; grid-template-columns: minmax(155px, 1.35fr) minmax(125px, 1fr) minmax(125px, 1fr) minmax(125px, 1fr) auto; gap: 12px; align-items: end; padding: 17px; margin-bottom: 12px; border: 1px solid #e4eaf2; border-radius: 9px; background: #fafbfe; }
+        .product-editor .variant-row .editor-field label { margin-bottom: 6px; }
+        .product-editor .variant-row .btn { min-height: 43px; }
+        .product-editor .editor-actions { display: flex; justify-content: flex-start; gap: 12px; flex-wrap: wrap; }
+        .product-editor .editor-actions .btn { min-height: 44px; min-width: 130px; }
+        .product-editor .editor-validation { display: block; color: #b42318; font-size: .86rem; margin-top: 5px; }
+        @media (max-width: 1050px) {
+            .product-editor .variant-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 650px) {
+            .product-editor .editor-panel { padding: 16px; }
+            .product-editor .editor-grid, .product-editor .variant-row { grid-template-columns: minmax(0, 1fr); }
+            .product-editor .editor-field--full { grid-column: auto; }
+        }
+    </style>
+@endsection
 
-    <!---Internal Owl Carousel css-->
-    <link href="{{ URL::asset('assets/plugins/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
-    <!---Internal  Multislider css-->
-    <link href="{{ URL::asset('assets/plugins/multislider/multislider.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
-    <!---Internal Fancy uploader css-->
-    <link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-    <!--Internal Sumoselect css-->
-    <link rel="stylesheet" href="{{ URL::asset('assets/plugins/sumoselect/sumoselect-rtl.css') }}">
-    <!--Internal  TelephoneInput css-->
-    <link rel="stylesheet" href="{{ URL::asset('assets/plugins/telephoneinput/telephoneinput-rtl.css') }}">
-@endsection
-@section('page-header')
-    <!-- breadcrumb -->
-    <div class="breadcrumb-header justify-content-between">
-        <div class="my-auto">
-            <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">Create Products</h4>
-            </div>
-        </div>
-    </div>
-    <!-- breadcrumb -->
-@endsection
 @section('content')
-    <!-- row opened -->
-    <div class="card">
-        <div class="card-body">
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        <li>{{ session('error') }}</li>
-                    </ul>
-                </div>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        <li>املأ جميع الحقول بشكل صحيح</li>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <p><strong>Images</strong> must be equal or less than <strong>1MB</strong></p>
-                <div class="form-group">
-                    <label for="">Image <span class="font-weight-bold text-danger">*</span></label>
-                    <input type="file" class="dropify" data-height="200" name="image" required />
-                </div>
-                <div class="row">
-                    @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="overview">Name {{ $localeCode }} <span
-                                        class="font-weight-bold text-danger">*</span></label>
-                                <input class="form-control" required placeholder="enter name"
-                                    name="name[{{ $localeCode }}]">
-                            </div>
-                        </div>
-                    @endforeach
-                    @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="overview">Description {{ $localeCode }} <span
-                                        class="font-weight-bold text-danger">*</span></label>
-                                <textarea class="form-control" placeholder="enter description" rows="5" name="description[{{ $localeCode }}]"
-                                    id="description{{ $localeCode }}"></textarea>
-                            </div>
-                        </div>
-                    @endforeach
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="overview">Category </label>
-                            <select name="category_id" class="form-control select2" required>
-                                @foreach ($categories as $category)
-                                    <option value="">choose</option>
-                                    <option value="{{ $category->id }}">{{ $category->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="overview">Defualt Price</label>
-                            <input type="number" class="form-control" placeholder="enter price" id="defualt-price">
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <input type="checkbox" id="featured" value="1" style="display: inline-block"
-                                name="is_featured" />
-                            <label for="featured">Top Seller (show in Top Seller products in home page)</label>
-                        </div>
-                    </div>
-
-                    {{-- variants --}}
-                    <div class="col-12">
-                        <button class="btn btn-secondary add-variant d-block m-auto" type="button">
-                            Add Product Variant
-                        </button>
-                        <div class="variants p-3 border border-1">
-                            <div class="item row position-relative">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="overview">Size <span
-                                                class="font-weight-bold text-danger">*</span></label>
-                                              <select name="size[]" class="form-control" required>
-                                            <option value="">Choose Size</option>
-                                            @foreach ($sizes as $size)
-                                                <option value="{{ $size->name }}">{{ $size->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="overview">Quantity <span
-                                                class="font-weight-bold text-danger">*</span></label>
-                                        <input type="number" min="0" class="form-control" name="quantity[]"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="overview">Price <span
-                                                class="font-weight-bold text-danger">*</span></label>
-                                        <input type="number" min="0" class="form-control variant-price"
-                                            name="price[]" required>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="overview">Old Price</label>
-                                        <input type="number" min="0" class="form-control" name="old_price[]">
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn d-block btn-outline-primary w-100 mt-4">Submit</button>
-            </form>
+    @php
+        $formVariants = old('variants') ?: [['size' => '', 'quantity' => 0, 'price' => '', 'old_price' => '']];
+    @endphp
+    <div class="product-editor" dir="rtl">
+        <div class="editor-heading">
+            <h1>إضافة صنف جديد</h1>
+            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">رجوع للأصناف</a>
         </div>
+        @if ($errors->any())
+            <div class="alert alert-danger" role="alert">راجع الحقول المعلّمة قبل الحفظ.</div>
+        @endif
+        <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <section class="editor-panel" aria-labelledby="details-title">
+                <h2 id="details-title">بيانات الصنف</h2>
+                <p class="editor-help">الصورة والوصف والاسم الإنجليزي ممكن تضيفهم بعدين. لحد ما ترفع صورة، هيظهر شعار المطعم.</p>
+                <div class="editor-grid">
+                    <div class="editor-field">
+                        <label for="product-name-ar">اسم الصنف بالعربي *</label>
+                        <input id="product-name-ar" class="form-control" name="name[ar]" value="{{ old('name.ar') }}" maxlength="255" required>
+                        @error('name.ar') <span class="editor-validation">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="editor-field">
+                        <label for="product-name-en">الاسم الإنجليزي (اختياري)</label>
+                        <input id="product-name-en" class="form-control" name="name[en]" value="{{ old('name.en') }}" maxlength="255">
+                        @error('name.en') <span class="editor-validation">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="editor-field">
+                        <label for="product-category">التصنيف *</label>
+                        <select id="product-category" class="form-control" name="category_id" required>
+                            <option value="">اختار التصنيف</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" {{ (string) old('category_id') === (string) $category->id ? 'selected' : '' }}>{{ $category->title }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id') <span class="editor-validation">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="editor-field">
+                        <label for="product-image">صورة الصنف (اختياري، حتى 1 ميجابايت)</label>
+                        <input id="product-image" type="file" class="form-control" name="image" accept="image/*">
+                        @error('image') <span class="editor-validation">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="editor-field">
+                        <label for="product-desc-ar">الوصف بالعربي (اختياري)</label>
+                        <textarea id="product-desc-ar" name="description[ar]" class="form-control" rows="3">{{ old('description.ar') }}</textarea>
+                        @error('description.ar') <span class="editor-validation">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="editor-field">
+                        <label for="product-desc-en">الوصف الإنجليزي (اختياري)</label>
+                        <textarea id="product-desc-en" name="description[en]" class="form-control" rows="3">{{ old('description.en') }}</textarea>
+                        @error('description.en') <span class="editor-validation">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="editor-field editor-field--full">
+                        <label for="product-featured">
+                            <input id="product-featured" type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}>
+                            عرض الصنف ضمن الأكثر طلبًا
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="editor-panel" aria-labelledby="variants-title">
+                <h2 id="variants-title">الأحجام والأسعار</h2>
+                <p class="editor-help">سجّل كل حجم وسعره بنفسك. الكمية صفر معناها الصنف مش متاح للطلب. سعر قبل الخصم اختياري.</p>
+                @error('variants') <p class="editor-validation">{{ $message }}</p> @enderror
+                <datalist id="available-sizes">
+                    @foreach ($sizes as $size)
+                        <option value="{{ $size->name }}"></option>
+                    @endforeach
+                </datalist>
+                <div id="variant-rows">
+                    @foreach ($formVariants as $key => $variant)
+                        <div class="variant-row" data-variant-row>
+                            <div class="editor-field">
+                                <label>الحجم *</label>
+                                <input class="form-control" list="available-sizes" name="variants[{{ $key }}][size]" value="{{ $variant['size'] ?? '' }}" maxlength="100" required>
+                                @error('variants.' . $key . '.size') <span class="editor-validation">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="editor-field">
+                                <label>السعر (جنيه) *</label>
+                                <input class="form-control" type="number" step="0.01" min="0.01" name="variants[{{ $key }}][price]" value="{{ $variant['price'] ?? '' }}" required>
+                                @error('variants.' . $key . '.price') <span class="editor-validation">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="editor-field">
+                                <label>سعر قبل الخصم</label>
+                                <input class="form-control" type="number" step="0.01" min="0" name="variants[{{ $key }}][old_price]" value="{{ $variant['old_price'] ?? '' }}">
+                                @error('variants.' . $key . '.old_price') <span class="editor-validation">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="editor-field">
+                                <label>الكمية *</label>
+                                <input class="form-control" type="number" step="1" min="0" name="variants[{{ $key }}][quantity]" value="{{ $variant['quantity'] ?? 0 }}" required>
+                                @error('variants.' . $key . '.quantity') <span class="editor-validation">{{ $message }}</span> @enderror
+                            </div>
+                            <button class="btn btn-outline-danger" type="button" data-remove-variant>إزالة</button>
+                        </div>
+                    @endforeach
+                </div>
+                <button class="btn btn-outline-primary" id="add-variant" type="button">+ إضافة حجم وسعر</button>
+            </section>
+
+            <div class="editor-actions">
+                <button class="btn btn-primary" type="submit">حفظ الصنف</button>
+                <a class="btn btn-outline-secondary" href="{{ route('products.index') }}">إلغاء</a>
+            </div>
+        </form>
     </div>
-    <!-- /row -->
-    </div>
-    <!-- Container closed -->
-    </div>
-    <!-- main-content closed -->
+
+    <template id="variant-template">
+        <div class="variant-row" data-variant-row>
+            <div class="editor-field"><label>الحجم *</label>
+                <input class="form-control" list="available-sizes" name="variants[__INDEX__][size]" maxlength="100" required>
+            </div>
+            <div class="editor-field"><label>السعر (جنيه) *</label>
+                <input class="form-control" type="number" step="0.01" min="0.01" name="variants[__INDEX__][price]" required>
+            </div>
+            <div class="editor-field"><label>سعر قبل الخصم</label>
+                <input class="form-control" type="number" step="0.01" min="0" name="variants[__INDEX__][old_price]">
+            </div>
+            <div class="editor-field"><label>الكمية *</label>
+                <input class="form-control" type="number" step="1" min="0" name="variants[__INDEX__][quantity]" value="0" required>
+            </div>
+            <button class="btn btn-outline-danger" type="button" data-remove-variant>إزالة</button>
+        </div>
+    </template>
 @endsection
+
 @section('js')
-    {{-- defualt price --}}
     <script>
-        $(document).ready(function() {
-            $('#defualt-price').on('keyup change', function() {
-                let defaultPrice = $(this).val();
-                $('.variant-price').val(defaultPrice);
+        (function () {
+            const rows = document.getElementById('variant-rows');
+            const template = document.getElementById('variant-template');
+            let nextIndex = 0;
+            document.getElementById('add-variant').addEventListener('click', function () {
+                let index;
+                do { index = 'new_' + nextIndex++; }
+                while (rows.querySelector('[name="variants[' + index + '][size]"]'));
+                rows.insertAdjacentHTML('beforeend', template.innerHTML.replaceAll('__INDEX__', index));
+                rows.lastElementChild.querySelector('[name$="[size]"]').focus();
             });
-        });
-    </script>
-
-    {{-- variants --}}
-    <script>
-        $(document).ready(function() {
-            const variantsContainer = $('.variants');
-            const addVariantButton = $('.add-variant');
-            let variantIndex = 1; // Start index for new variants
-
-            addVariantButton.on('click', function() {
-                const originalItem = variantsContainer.find('.item').first();
-                const newItem = originalItem.clone();
-                const defaultPrice = $('#defualt-price').val();
-
-                // Clear inputs and reset selects
-                newItem.find('input').val('');
-                newItem.find('select').prop('selectedIndex', 0);
-
-                // Set default price if it's not empty
-                const variantPriceInput = newItem.find('.variant-price');
-                variantPriceInput.val(defaultPrice);
-
-                // Update the name attribute for variant_images input
-                newItem.find('input[name^="variant_images"]').attr('name',
-                    `variant_images[${variantIndex}][]`);
-
-                // Add remove button
-                const removeButton = $('<button>', {
-                    type: 'button',
-                    class: 'remove-variant btn btn-danger btn-sm',
-                    html: '×',
-                    css: {
-                        position: 'absolute',
-                        top: '55%',
-                        right: '-15px',
-                        transform: 'translateY(-50%)',
-                        padding: '2px 7px'
-                    }
-                });
-
-                removeButton.on('click', function() {
-                    newItem.remove();
-                });
-
-                newItem.append(removeButton);
-                variantsContainer.append(newItem);
-                variantIndex++; // Increment index for the next variant
+            rows.addEventListener('click', function (event) {
+                if (!event.target.matches('[data-remove-variant]')) return;
+                if (rows.querySelectorAll('[data-variant-row]').length <= 1) return;
+                event.target.closest('[data-variant-row]').remove();
             });
-        });
-    </script>
-
-
-    <!-- Internal Data tables -->
-    <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.dataTables.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/responsive.dataTables.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/responsive.bootstrap4.min.js') }}"></script>
-    <!--Internal  Datatable js -->
-    <script src="{{ URL::asset('assets/js/table-data.js') }}"></script>
-    <script src="{{ URL::asset('assets/js/modal.js') }}"></script>
-
-    <!--Internal Fileuploads js-->
-    <script src="{{ URL::asset('assets/plugins/fileuploads/js/fileupload.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/fileuploads/js/file-upload.js') }}"></script>
-    <!--Internal Fancy uploader js-->
-    <script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
-    <!--Internal  Form-elements js-->
-    <script src="{{ URL::asset('assets/js/advanced-form-elements.js') }}"></script>
-
-    <script src="{{ URL::asset('assets/plugins/jquery-ui/ui/widgets/datepicker.js') }}"></script>
-    <!--Internal  jquery.maskedinput js -->
-    <script src="{{ URL::asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.js') }}"></script>
-    <!--Internal  spectrum-colorpicker js -->
-    <script src="{{ URL::asset('assets/plugins/spectrum-colorpicker/spectrum.js') }}"></script>
-    <!-- Internal Select2.min js -->
-    <script src="{{ URL::asset('assets/plugins/select2/js/select2.min.js') }}"></script>
-    <!--Internal Ion.rangeSlider.min js -->
-    <script src="{{ URL::asset('assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
-    <!--Internal  jquery-simple-datetimepicker js -->
-    <script src="{{ URL::asset('assets/plugins/amazeui-datetimepicker/js/amazeui.datetimepicker.min.js') }}"></script>
-    <!-- Ionicons js -->
-    <script src="{{ URL::asset('assets/plugins/jquery-simple-datetimepicker/jquery.simple-dtpicker.js') }}"></script>
-    <!--Internal  pickerjs js -->
-    <script src="{{ URL::asset('assets/plugins/pickerjs/picker.min.js') }}"></script>
-    <!-- Internal form-elements js -->
-    <script src="{{ URL::asset('assets/js/form-elements.js') }}"></script>
-
-    <script>
-        @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-            ClassicEditor
-                .create(document.querySelector('#description{{ $localeCode }}'))
-                .catch(error => {
-                    console.error(error);
-                });
-            ClassicEditor
-                .create(document.querySelector('#small_description{{ $localeCode }}'))
-                .catch(error => {
-                    console.error(error);
-                });
-        @endforeach
+        }());
     </script>
 @endsection

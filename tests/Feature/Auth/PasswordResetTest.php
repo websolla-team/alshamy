@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect;
 use Tests\TestCase;
 
 class PasswordResetTest extends TestCase
@@ -14,6 +15,8 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_link_screen_can_be_rendered(): void
     {
+        $this->withoutVite();
+        $this->withoutMiddleware(LocaleSessionRedirect::class);
         $response = $this->get('/forgot-password');
 
         $response->assertStatus(200);
@@ -32,6 +35,8 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_screen_can_be_rendered(): void
     {
+        $this->withoutVite();
+        $this->withoutMiddleware(LocaleSessionRedirect::class);
         Notification::fake();
 
         $user = User::factory()->create();

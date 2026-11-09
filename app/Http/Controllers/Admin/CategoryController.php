@@ -15,26 +15,29 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('order_num','asc')->get();
+        $categories = Category::orderBy('order_num', 'asc')->get();
+
         return view('admin.categories.index', compact('categories'));
     }
 
     public function create()
     {
         $categoryTypes = CategoryType::get();
+
         return view('admin.categories.create', compact('categoryTypes'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-             'image' => 'image',
+            'image' => 'image',
             'title.*' => 'required|string',
             'order_num' => 'nullable|numeric',
         ]);
         $fileName = Helper::storeImage($request->file('image'), 'categories');
         $data['image'] = $fileName;
         Category::create($data);
+
         return redirect()->route('categories.index');
     }
 
@@ -47,15 +50,16 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         $categoryTypes = CategoryType::get();
+
         return view('admin.categories.edit', compact('category', 'categoryTypes'));
     }
 
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-              'image' => 'image',
+            'image' => 'image',
             'title.*' => 'required|string',
-                  'order_num' => 'nullable|numeric',
+            'order_num' => 'nullable|numeric',
         ]);
         unset($data['image']);
         $category = Category::findOrFail($id);
@@ -64,14 +68,21 @@ class CategoryController extends Controller
             $data['image'] = $fileName;
         }
         $category->update($data);
+
         return redirect()->route('categories.index');
     }
 
     public function destroy(Request $request, $id)
     {
         $category = Category::findOrFail($request->id);
+        if ($category->products()->exists()) {
+            return back()->withErrors([
+                'category' => 'القسم ده فيه أصناف. انقل الأصناف لقسم تاني قبل الحذف.',
+            ]);
+        }
         Helper::deleteImage($category->image);
         $category->delete();
+
         return back();
     }
 }

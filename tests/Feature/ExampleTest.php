@@ -2,18 +2,17 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_unlocalized_home_redirects_to_the_configured_locale(): void
     {
         $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $response->assertRedirect(LaravelLocalization::getLocalizedURL(
+            LaravelLocalization::getDefaultLocale(),
+            '/'
+        ));
     }
 }
