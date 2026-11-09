@@ -2,195 +2,144 @@
 @section('title')
     {{ __('main.site') }} | {{ __('main.home') }}
 @endsection
-@section('css')
-@endsection
+
 @section('content')
+    @php
+        $orderPhone = preg_replace('/[^\d+]/', '', $Contact?->phone1 ?? '');
+    @endphp
 
+    <main id="menu-categories" class="alshamy-menu-page">
+        <div class="container">
+            <div class="alshamy-menu-intro">
+                <h1>قائمة الشامي</h1>
+                <p>اختار القسم وشوف الأصناف والأسعار بسهولة</p>
+            </div>
 
-
-
-
-
-
-
-
-    <!-- Food Menu section  S T A R T -->
- <section class="food-menu-section fix section-padding">
-        <div class="burger-shape">
-            <img src="{{asset('website/assets/img/shape/burger-shape.png')}}" alt="img">
-        </div>
-        <div class="fry-shape">
-            <img src="{{asset('website/assets/img/shape/fry-shape.png')}}" alt="img">
-        </div>
-        <div class="food-menu-wrapper style1">
-            <div class="container">
-                <div class="food-menu-tab-wrapper style-bg">
-                    <div class="title-area">
-                        <div class="sub-title text-center wow fadeInUp" data-wow-delay="0.5s">
-                            <img class="me-1" src="{{asset('website/assets/img/icon/titleIcon.svg')}}" alt="icon">{{ __('main.site') }}<img class="ms-1"
-                                src="{{asset('website/assets/img/icon/titleIcon.svg')}}" alt="icon">
-                        </div>
-                        <h2 class="title wow fadeInUp" data-wow-delay="0.7s">
-                           {{ __('main.related products') }}
-                        </h2>
-                    </div>
-
-
-                    <div class="food-menu-tab">
-                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                           @foreach ($categories as $index => $category)
-
-
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link {{ $index == 0 ? 'active' : '' }}" id="pills-{{ $category->id }}-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-{{ $category->id }}" type="button" role="tab"
-                                    aria-controls="pills-{{ $category->id }}" aria-selected="true"><img
-                                        src="{{asset($category->image )}}" alt="icon">{{ $category->title }}</button>
-                            </li>
-                             @endforeach
-
-
+            @if ($categories->isEmpty())
+                <p class="alshamy-menu-empty">المنيو مش متاح حاليًا. تواصل معانا لمعرفة الأصناف المتوفرة.</p>
+            @else
+                <div class="food-menu-tab alshamy-menu">
+                    <nav aria-label="أقسام المنيو" class="alshamy-categories">
+                        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                            @foreach ($categories as $index => $category)
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {{ $index === 0 ? 'active' : '' }}"
+                                            id="pills-{{ $category->id }}-tab" data-bs-toggle="pill"
+                                            data-bs-target="#pills-{{ $category->id }}" type="button" role="tab"
+                                            aria-controls="pills-{{ $category->id }}"
+                                            aria-selected="{{ $index === 0 ? 'true' : 'false' }}">
+                                        {{ $category->title }}
+                                    </button>
+                                </li>
+                            @endforeach
                         </ul>
-                   <div class="tab-content" id="pills-tabContent">
+                    </nav>
+
+                    <div class="tab-content" id="pills-tabContent">
                         @foreach ($categories as $index => $category)
-                        <div class="tab-pane fade {{ $index == 0 ? 'show active' : '' }}"
-                            id="pills-{{ $category->id }}" role="tabpanel">
-
-                            <div class="row gx-60">
-
-                                @foreach ($category->products as $product)
-                                    <div class="col-lg-6">
-                                        <div class="single-menu-items">
-                                            <div class="details">
-                                                <div class="menu-item-thumb">
-                                                    <img src="{{ asset($product->image) }}" alt="thumb">
+                            <section class="tab-pane fade {{ $index === 0 ? 'show active' : '' }}"
+                                     id="pills-{{ $category->id }}" role="tabpanel"
+                                     aria-labelledby="pills-{{ $category->id }}-tab" tabindex="0">
+                                <h2 class="alshamy-category-title">{{ $category->title }}</h2>
+                                <div class="alshamy-products">
+                                    @foreach ($category->products as $product)
+                                        @php
+                                            $firstVariant = $product->variants->first();
+                                            $hasPrice = $firstVariant && (float) $firstVariant->price > 0;
+                                            $showOldPrice = $hasPrice && (float) $firstVariant->old_price > (float) $firstVariant->price;
+                                            $description = trim(strip_tags(html_entity_decode((string) $product->description)));
+                                        @endphp
+                                        <article class="alshamy-menu-card" data-product-id="{{ $product->id }}">
+                                            <div class="alshamy-menu-card__image">
+                                                @if ($product->image)
+                                                    <img src="{{ asset($product->image) }}"
+                                                         alt="{{ $product->name }}" width="88" height="88"
+                                                         loading="{{ $index === 0 && $loop->first ? 'eager' : 'lazy' }}"
+                                                         @if ($index === 0 && $loop->first) fetchpriority="high" @endif
+                                                         decoding="async">
+                                                @else
+                                                    <span class="alshamy-menu-card__no-image" aria-hidden="true">الشامي</span>
+                                                @endif
+                                            </div>
+                                            <div class="alshamy-menu-card__content">
+                                                <div class="alshamy-menu-card__heading">
+                                                    <h3>{{ $product->name }}</h3>
+                                                    @if ($product->variants->count() === 1 && $firstVariant?->size)
+                                                        <span class="alshamy-menu-card__single-size">{{ $firstVariant->size }}</span>
+                                                    @endif
                                                 </div>
 
-                                                <div class="menu-content">
+                                                @if ($description)
+                                                    <p>{{ \Illuminate\Support\Str::limit($description, 100) }}</p>
+                                                @endif
 
-                                                    @php
-                                                    $colors = $product->variants->pluck('color.name')->unique()->implode(',');
-                                                    $sizes = $product->variants->pluck('size')->unique()->implode(',');
-                                                    @endphp
+                                                @if ($product->variants->count() > 1)
+                                                    <fieldset class="alshamy-size-picker">
+                                                        <legend class="visually-hidden">اختر حجم {{ $product->name }}</legend>
+                                                        @foreach ($product->variants as $variant)
+                                                            <label class="alshamy-size-chip">
+                                                                <input type="radio" name="size-{{ $product->id }}"
+                                                                       value="{{ $variant->id }}"
+                                                                       data-price="{{ $variant->price }}"
+                                                                       data-old-price="{{ $variant->old_price }}"
+                                                                       {{ $loop->first ? 'checked' : '' }}>
+                                                                <span>{{ $variant->size }}</span>
+                                                            </label>
+                                                        @endforeach
+                                                    </fieldset>
+                                                @endif
 
-                                                    <a href="#">
-
-                                                    <h3 class="active">{{ $product->name }}</h3>
+                                                <div class="alshamy-menu-card__bottom">
+                                                    <div class="alshamy-menu-card__prices">
+                                                        <strong class="alshamy-menu-card__price" aria-live="polite">
+                                                            @if ($hasPrice)
+                                                                <bdi>{{ $firstVariant->price }} جنيه</bdi>
+                                                            @else
+                                                                السعر عند الطلب
+                                                            @endif
+                                                        </strong>
+                                                        <del class="alshamy-menu-card__old-price"
+                                                             @unless ($showOldPrice) hidden @endunless>
+                                                            @if ($showOldPrice)<bdi>{{ $firstVariant->old_price }} جنيه</bdi>@endif
+                                                        </del>
+                                                    </div>
+                                                    <a class="alshamy-menu-card__order"
+                                                       href="{{ $orderPhone ? 'tel:' . $orderPhone : route('contacts') }}"
+                                                       aria-label="{{ $orderPhone ? 'اتصل لطلب' : 'تواصل لطلب' }} {{ $product->name }}">
+                                                        {{ $orderPhone ? 'اتصل للطلب' : 'تواصل للطلب' }}
+                                                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
                                                     </a>
-
-
-                                                    <p>{{ Helper::limit(trim(html_entity_decode($product->description)), 200) }}
-</p>
                                                 </div>
                                             </div>
-
-                                       <h6>
-                                            <span class="price">
-                                                {{ __('main.currency') }} {{ $product->oneVariant?->price }} -
-                                            </span>
-
-                                            <del class="old_price" style="{{ $product->oneVariant?->old_price ? '' : 'display:none' }};font-size:14px">
-                                                {{ __('main.currency') }} {{ $product->oneVariant?->old_price }}
-                                            </del>
-
-
-                                        </h6>
-                                             <select class="sizeSelect styled-select">
-                                                <option    value=""
-                                                        data-price=""
-                                                        data-old-price=""
-                                                   >الحجم</option>
-                                                @foreach ($product->variants as $variant)
-                                                    <option
-                                                        value="{{ $variant->size }}"
-                                                        data-price="{{ $variant->price }}"
-                                                        data-old-price="{{ $variant->old_price }}"
-                                                    >
-                                                        {{ $variant->size }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-
-
-                                        </div>
-                                    </div>
-                                @endforeach
-
-                            </div>
-                        </div>
+                                        </article>
+                                    @endforeach
+                                </div>
+                            </section>
                         @endforeach
-                        </div>
-
-
                     </div>
-
                 </div>
-            </div>
+            @endif
         </div>
-
-    </section>
-
-
-
-
-
+    </main>
 @endsection
+
 @section('js')
-<script>
-const slider = document.querySelector('.food-menu-tab .nav-pills');
-let isDown = false;
-let startX;
-let scrollLeft;
+    <script>
+        document.querySelectorAll('.alshamy-size-picker').forEach((picker) => {
+            picker.addEventListener('change', (event) => {
+                if (!event.target.matches('input[type="radio"]')) return;
 
-slider.addEventListener('mousedown', (e) => {
-  isDown = true;
-  slider.classList.add('active');
-  startX = e.pageX - slider.offsetLeft;
-  scrollLeft = slider.scrollLeft;
-});
+                const card = event.target.closest('.alshamy-menu-card');
+                const price = Number(event.target.dataset.price);
+                const oldPrice = Number(event.target.dataset.oldPrice);
+                const display = card.querySelector('.alshamy-menu-card__price');
+                const oldDisplay = card.querySelector('.alshamy-menu-card__old-price');
+                const money = (amount) => amount.toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' جنيه';
 
-slider.addEventListener('mouseleave', () => {
-  isDown = false;
-});
-
-slider.addEventListener('mouseup', () => {
-  isDown = false;
-});
-
-slider.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - slider.offsetLeft;
-  const walk = (x - startX) * 1.5;
-  slider.scrollLeft = scrollLeft - walk;
-});
-</script>
-
-
-<script>
-    $('.sizeSelect').on('change', function () {
-        let selectedOption = $(this).find(':selected');
-        let price = selectedOption.data('price');
-        let oldPrice = selectedOption.data('old-price');
-
-        // اختر العناصر الخاصة بالـ parent (single-menu-items)
-        let parent = $(this).closest('.single-menu-items');
-            if (price) {
-                parent.find('.price').text("{{ __('main.currency') }} " + price +" - ");
-
-            }else{
-            parent.find('.price').text("برجاء اختيار الحجم" );
-            }
-
-
-
-        if (oldPrice) {
-            parent.find('.old_price').text("{{ __('main.currency') }} " + oldPrice).show();
-        } else {
-            parent.find('.old_price').hide();
-        }
-    });
-</script>
-
-
+                display.textContent = Number.isFinite(price) && price > 0 ? money(price) : 'السعر عند الطلب';
+                oldDisplay.hidden = !(Number.isFinite(oldPrice) && oldPrice > price && price > 0);
+                oldDisplay.textContent = oldDisplay.hidden ? '' : money(oldPrice);
+            });
+        });
+    </script>
 @endsection

@@ -48,6 +48,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('exampleModal');
+    if (!modal) return;
 
     modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;

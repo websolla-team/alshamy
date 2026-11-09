@@ -484,24 +484,7 @@ JS TABLE OF CONTENTS
         /*-----------------------------------
             16. Popular Dishes Tab       
         -----------------------------------*/
-        $(document).ready(function () {
-            // Function to deactivate all tabs
-            function deactivateAllTabs() {
-                $('.nav-link').removeClass('active').attr('aria-selected', 'false');
-                $('.tab-pane').removeClass('active show');
-            }
-
-            // Add event listeners to all tabs
-            $('.nav-link').on('click', function () {
-                deactivateAllTabs(); // Deactivate all tabs
-                $(this).addClass('active').attr('aria-selected', 'true'); // Activate the clicked tab
-
-                const target = $(this).data('bs-target');
-                if (target) {
-                    $(target).addClass('active show'); // Show the corresponding tab content
-                }
-            });
-        });
+        // Bootstrap manages tab state and keyboard navigation via data-bs-toggle.
 
 
 

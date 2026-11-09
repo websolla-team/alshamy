@@ -15,70 +15,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-              $offers = Offer::get();
+        $categories = Category::query()
+            ->whereHas('products')
+            ->with(['products' => function ($query) {
+                $query->with('variants')->orderBy('id');
+            }])
+            ->orderBy('order_num', 'asc')
+            ->get(['id', 'title', 'image']);
 
-
-        $sliders = Slider::get(['title', 'image','text']);
-             $single_product = Product::with([
-            'category.categoryType',
-            'images',
-            'variants.color'
-        ])->where('is_featured',1)->first();
-        $reviews = Review::get();
-    $features = Product::query()
-    ->with([
-        'oneVariant',
-        'oneImage',
-        'variants',
-        'images' => function ($query) {
-            $query->select('id', 'product_id', 'color_id', 'image')
-                  ->with('color')
-                  ->distinct('color_id');
-        }
-    ])
-    ->where('is_featured', 1)
-    ->latest()
-    ->limit(12)
-    ->get(['id', 'name', 'image']);
-
-$recentProducts = Product::query()
-    ->with([
-        'oneVariant',
-        'oneImage',
-        'variants',
-        'images' => function ($query) {
-            $query->select('id', 'product_id', 'color_id', 'image')
-                  ->with('color')
-                  ->distinct('color_id');
-        }
-    ])
-    ->where('is_featured', 0)
-    ->latest()
-    ->get(['id', 'name', 'image']);
-$Products = Product::query()
-    ->with([
-        'oneVariant',
-        'oneImage',
-        'variants',
-        'images' => function ($query) {
-            $query->select('id', 'product_id', 'color_id', 'image')
-                  ->with('color')
-                  ->distinct('color_id');
-        }
-    ])
-
-    ->latest()
-    ->get(['id', 'name', 'image']);
-
-        $categories  = Category::orderBy('order_num','asc')->withCount(['products'])->get(['id', 'title', 'image']);
-        return view('website.index', compact(
-            'sliders',
-            'reviews',
-            'features',
-            'recentProducts',
-            'categories',
-            'single_product','offers','Products'
-        ));
+        return view('website.index', compact('categories'));
     }
     public function page($id = 1)
     {

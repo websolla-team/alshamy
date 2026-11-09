@@ -16,7 +16,7 @@
                                 <div class="item1"><i class="fa-solid fa-location-dot"></i></div>
                                 <div class="item2">
                                     <h6>{{ __('main.address') }}</h6>
-                                    <p>{{ $Contact->address }}</p>
+                                    <p>مدينة السادات، مول الزهور، المنطقة الخامسة</p>
                                 </div>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                                 <div class="item1"><i class="fa-regular fa-phone-volume"></i></div>
                                 <div class="item2">
                                     <h6>{{ __('main.call us') }}</h6>
-                                    <p>+{{ $Contact->phone1 }}</p>
+                                    <p><a href="tel:{{ preg_replace('/[^\d+]/', '', $Contact?->phone1 ?? '') }}">{{ $Contact?->phone1 }}</a></p>
                                 </div>
                             </div>
                         </div>
@@ -48,8 +48,12 @@
             <div class="container">
                 <div class="footer-wrapper d-flex align-items-center justify-content-between">
                     <p class="wow fadeInLeft" data-wow-delay=".3s">
-                        © All Copyright 2025 by <a href="{{ route('home') }}">Elshamy</a> Created By <a href="https://websolla.com/en">WebSolla</a>
+                        © {{ date('Y') }} <a href="{{ route('home') }}">الشامي</a> — جميع الحقوق محفوظة
                     </p>
+                    <nav class="alshamy-footer-links" aria-label="روابط الموقع">
+                        <a href="{{ route('about') }}">من نحن</a>
+                        <a href="{{ route('contacts') }}">تواصل معنا</a>
+                    </nav>
 
                 </div>
             </div>

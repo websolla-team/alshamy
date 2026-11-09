@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset('website/assets/css/nice-select.css') }}">
     <!--<< Main.css >>-->
     <link rel="stylesheet" href="{{ asset('website/assets/css/main.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('website/assets/css/alshamy-menu.css') }}?v=1">
 
 
 

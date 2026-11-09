@@ -35,7 +35,7 @@
                         <div class="contact-box style1">
                             <div class="contact-icon"><img src="{{ asset('website/assets/img/icon/location.png')}}" alt="icon"></div>
                             <h3 class="title">{{ __('main.address') }}</h3>
-                            <p>{{ $Contact->address }}</p>
+                            <p>مدينة السادات، مول الزهور، المنطقة الخامسة</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-xl-3">
@@ -48,7 +48,7 @@
                     <div class="col-md-6 col-xl-3">
                         <div class="contact-box style1">
                             <div class="contact-icon"><img src="{{ asset('website/assets/img/icon/phone.png')}}" alt="icon"></div>
-                            <h3 class="title">Hot: +{{ $Contact->phone1 }}</h3>
+                            <h3 class="title"><a href="tel:{{ preg_replace('/[^\d+]/', '', $Contact?->phone1 ?? '') }}">{{ $Contact?->phone1 }}</a></h3>
                             <p>{{ $Contact->phone2 }}.</p>
                         </div>
                     </div>
@@ -112,8 +112,12 @@
     <div class="map-wrapper" style="line-height: 0;">
 
 
-            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6903.536910543796!2d31.345772000000004!3d30.100816999999996!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1458151915f49835%3A0x40c63e255b5b3b35!2z2YjZitioINiz2YjZhNinIC0gd2ViIHNvbGxh!5e0!3m2!1sar!2seg!4v1765808756627!5m2!1sar!2seg"  loading="lazy"    height="550" style="border:0; width: 100%;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="container text-center py-4">
+                <a href="https://www.google.com/maps/search/?api=1&query={{ rawurlencode('مول الزهور، مدينة السادات، المنوفية') }}"
+                   target="_blank" rel="noopener noreferrer">
+                    ابحث عن مول الزهور بمدينة السادات على الخريطة
+                </a>
+            </div>
     </div>
 
 
