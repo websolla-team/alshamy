@@ -144,6 +144,19 @@
 
 @section('js')
     <script>
+        document.querySelectorAll('.alshamy-menu-card__image img').forEach((image) => {
+            const showFallback = () => {
+                if (!image.isConnected) return;
+                const fallback = document.createElement('span');
+                fallback.className = 'alshamy-menu-card__no-image';
+                fallback.setAttribute('aria-hidden', 'true');
+                fallback.textContent = 'الشامي';
+                image.replaceWith(fallback);
+            };
+            image.addEventListener('error', showFallback, { once: true });
+            if (image.complete && image.naturalWidth === 0) showFallback();
+        });
+
         const categoryTabs = Array.from(document.querySelectorAll('#pills-tab [data-bs-toggle="pill"]'));
         const activateLinkedCategory = () => {
             const matchingTab = categoryTabs.find((tab) =>
@@ -154,6 +167,23 @@
                 matchingTab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
             }
         };
+
+        document.getElementById('pills-tab')?.addEventListener('keydown', (event) => {
+            if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+            const index = categoryTabs.indexOf(event.target.closest('[data-bs-toggle="pill"]'));
+            if (index < 0) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            const rtl = document.documentElement.dir === 'rtl';
+            let next = index;
+            if (event.key === 'Home') next = 0;
+            if (event.key === 'End') next = categoryTabs.length - 1;
+            if (event.key === 'ArrowLeft') next = index + (rtl ? 1 : -1);
+            if (event.key === 'ArrowRight') next = index + (rtl ? -1 : 1);
+            const target = categoryTabs[(next + categoryTabs.length) % categoryTabs.length];
+            target.focus();
+            if (window.bootstrap?.Tab) window.bootstrap.Tab.getOrCreateInstance(target).show();
+        }, true);
 
         categoryTabs.forEach((tab) => {
             tab.addEventListener('shown.bs.tab', () => {

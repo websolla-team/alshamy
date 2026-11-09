@@ -244,15 +244,19 @@ final class MenuImporter
             throw new LogicException('Production imports are blocked. Use a verified staging database.');
         }
         $connection = (string) config('database.default');
-        $driver = (string) config("database.connections.{$connection}.driver");
-        $database = strtolower((string) config("database.connections.{$connection}.database"));
+        $settings = config("database.connections.{$connection}");
+        $driver = (string) ($settings['driver'] ?? '');
+        $configuredDatabase = (string) ($settings['database'] ?? '');
+        $database = strtolower($configuredDatabase);
         if (! app()->environment(['local', 'testing', 'staging'])
             || $driver !== 'sqlite'
+            || ! empty($settings['url']) || ! empty($settings['read']) || ! empty($settings['write'])
             || ! (str_contains($database, 'staging') || str_contains($database, 'test') || $database === ':memory:')) {
-            throw new LogicException('Importer writes are restricted to isolated local SQLite staging or test databases.');
+            throw new LogicException('Importer writes are restricted to isolated local SQLite staging or test databases without remote connection overrides.');
         }
+        $resolved = false;
         if ($database !== ':memory:') {
-            $resolved = realpath($database);
+            $resolved = realpath($configuredDatabase);
             $databaseRoot = realpath(database_path());
             $storageRoot = realpath(storage_path());
             $insideProject = ($databaseRoot && str_starts_with(strtolower($resolved ?: ''), strtolower($databaseRoot.DIRECTORY_SEPARATOR)))
@@ -260,6 +264,19 @@ final class MenuImporter
             if (! $resolved || ! $insideProject) {
                 throw new LogicException('Staging SQLite must be inside the project database or storage directory.');
             }
+        }
+        $active = DB::connection($connection);
+        if ($active->getDriverName() !== 'sqlite') {
+            throw new LogicException('The active database connection is not SQLite.');
+        }
+        $main = collect($active->select('PRAGMA database_list'))
+            ->first(fn ($attached) => $attached->name === 'main');
+        $activeFile = (string) ($main->file ?? '');
+        $matchingFile = $database === ':memory:'
+            ? $activeFile === ''
+            : $activeFile !== '' && realpath($activeFile) === $resolved;
+        if (! $matchingFile) {
+            throw new LogicException('The active SQLite database is different from the approved isolated target.');
         }
         if (! $approvedDigest || ! hash_equals((string) $plan['digest'], $approvedDigest)) {
             throw new LogicException('Preview digest was not approved.');
@@ -294,11 +311,14 @@ final class MenuImporter
                 }
                 if (str_starts_with($action['status'], 'addon_')) {
                     if ($action['status'] !== 'addon_unchanged') {
-                        DB::table('menu_addons')->updateOrInsert(
-                            ['menu_key' => $action['menu_key']],
-                            ['name' => $action['name'], 'section' => $action['section'],
+                        DB::table('menu_addons')->upsert([[
+                                'menu_key' => $action['menu_key'],
+                                'name' => $action['name'], 'section' => $action['section'],
                                 'choices' => json_encode($action['choices'], JSON_UNESCAPED_UNICODE),
-                                'updated_at' => now(), 'created_at' => now()]
+                                'created_at' => now(), 'updated_at' => now(),
+                            ]],
+                            ['menu_key'],
+                            ['name', 'section', 'choices', 'updated_at']
                         );
                         $results['addons']++;
                     }
@@ -365,10 +385,18 @@ final class MenuImporter
                     }
                 }
 
-                DB::table('menu_import_links')->updateOrInsert(
-                    ['menu_key' => $action['menu_key']],
-                    ['product_id' => $product->id, 'updated_at' => now(), 'created_at' => now()]
-                );
+                // Re-applying an unchanged plan must not rewrite identity history.
+                // An upsert keeps the original created_at for an existing link.
+                if ($action['status'] !== 'unchanged') {
+                    DB::table('menu_import_links')->upsert([[
+                            'menu_key' => $action['menu_key'],
+                            'product_id' => $product->id,
+                            'created_at' => now(), 'updated_at' => now(),
+                        ]],
+                        ['menu_key'],
+                        ['product_id', 'updated_at']
+                    );
+                }
             }
 
             return $results;

@@ -241,6 +241,31 @@ class AdminProductWorkflowTest extends TestCase
         $this->assertStringContainsString('<img src="http://localhost/logo/logo.png"', $html);
     }
 
+    public function test_admin_edit_displays_photo_fallback_when_image_path_is_blank_or_root(): void
+    {
+        $this->signInAsAdmin();
+        $product = $this->makeProduct($this->makeCategory());
+        $product->variants()->create(['size' => 'وجبة', 'price' => 100, 'quantity' => 0]);
+        foreach (['', '  ', '/'] as $badPath) {
+            $product->update(['image' => $badPath]);
+            $html = view('admin.products.edit', [
+                'product' => $product->fresh()->load('variants'),
+                'categories' => Category::all(), 'sizes' => collect(),
+                'errors' => new ViewErrorBag,
+            ])->render();
+            $this->assertStringContainsString('class="editor-photo-fallback"', $html);
+            $this->assertStringNotContainsString('<img src="http://localhost/"', $html);
+        }
+        $product->update(['image' => '/logo/logo.png']);
+        $html = view('admin.products.edit', [
+            'product' => $product->fresh()->load('variants'),
+            'categories' => Category::all(), 'sizes' => collect(),
+            'errors' => new ViewErrorBag,
+        ])->render();
+        $this->assertStringContainsString('src="http://localhost/logo/logo.png"', $html);
+        $this->assertStringNotContainsString('class="editor-photo-fallback"', $html);
+    }
+
     public function test_admin_layout_guards_optional_scrollbars_and_keeps_desktop_sidebar_script(): void
     {
         $this->signInAsAdmin();

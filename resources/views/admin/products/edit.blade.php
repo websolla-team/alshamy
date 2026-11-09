@@ -21,6 +21,7 @@
         .product-editor .editor-actions { display: flex; justify-content: flex-start; gap: 12px; flex-wrap: wrap; }
         .product-editor .editor-actions .btn { min-height: 44px; min-width: 130px; }
         .product-editor .editor-validation { display: block; color: #b42318; font-size: .86rem; margin-top: 5px; }
+        .product-editor .editor-photo-fallback { display: grid; place-items: center; width: 72px; height: 72px; margin-top: 10px; border-radius: 8px; background: #f5ecdf; color: #78471f; font-weight: 700; }
         @media (max-width: 1050px) {
             .product-editor .variant-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
@@ -42,6 +43,7 @@
             'old_price' => $variant->old_price,
         ])->all();
         $formVariants = old('variants') ?: ($savedVariants ?: [['size' => '', 'quantity' => 0, 'price' => '', 'old_price' => '']]);
+        $imagePath = trim((string) $product->image);
     @endphp
     <div class="product-editor" dir="rtl">
         <div class="editor-heading">
@@ -82,7 +84,11 @@
                         <label for="product-image">تغيير الصورة (اختياري، حتى 1 ميجابايت)</label>
                         <input id="product-image" type="file" class="form-control" name="image" accept="image/*">
                         @error('image') <span class="editor-validation">{{ $message }}</span> @enderror
-                        <img src="{{ asset($product->image) }}" alt="صورة الصنف الحالية" style="width: 72px; height: 72px; object-fit: cover; border-radius: 8px; margin-top: 10px;" loading="lazy">
+                        @if ($imagePath !== '' && $imagePath !== '/')
+                            <img class="editor-existing-image" src="{{ asset($imagePath) }}" alt="صورة الصنف الحالية" style="width: 72px; height: 72px; object-fit: cover; border-radius: 8px; margin-top: 10px;" loading="lazy">
+                        @else
+                            <span class="editor-photo-fallback" aria-hidden="true">الشامي</span>
+                        @endif
                     </div>
                     <div class="editor-field">
                         <label for="product-desc-ar">الوصف بالعربي (اختياري)</label>
@@ -178,6 +184,19 @@
 @section('js')
     <script>
         (function () {
+            const image = document.querySelector('.editor-existing-image');
+            if (image) {
+                function showFallback() {
+                    if (!image.isConnected) return;
+                    const fallback = document.createElement('span');
+                    fallback.className = 'editor-photo-fallback';
+                    fallback.setAttribute('aria-hidden', 'true');
+                    fallback.textContent = 'الشامي';
+                    image.replaceWith(fallback);
+                }
+                image.addEventListener('error', showFallback, { once: true });
+                if (image.complete && image.naturalWidth === 0) showFallback();
+            }
             const rows = document.getElementById('variant-rows');
             const template = document.getElementById('variant-template');
             let nextIndex = 0;

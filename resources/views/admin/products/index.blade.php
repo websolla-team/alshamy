@@ -214,6 +214,19 @@
             const empty = document.getElementById('ap-no-results');
             const rows = Array.from(document.querySelectorAll('.ap-product-row'));
 
+            document.querySelectorAll('.ap-product img').forEach(function (image) {
+                function showFallback() {
+                    if (!image.isConnected) return;
+                    const fallback = document.createElement('span');
+                    fallback.className = 'ap-photo-fallback';
+                    fallback.setAttribute('aria-hidden', 'true');
+                    fallback.textContent = 'الشامي';
+                    image.replaceWith(fallback);
+                }
+                image.addEventListener('error', showFallback, { once: true });
+                if (image.complete && image.naturalWidth === 0) showFallback();
+            });
+
             function filterProducts() {
                 const query = search.value.trim().toLocaleLowerCase();
                 let count = 0;

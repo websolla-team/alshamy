@@ -79,6 +79,106 @@ class MenuImportTest extends TestCase
         $this->assertSame(1, DB::table('menu_addons')->count());
     }
 
+    public function test_reapplying_an_unchanged_menu_does_not_rewrite_import_link_timestamps(): void
+    {
+        $this->travelTo(\Carbon\Carbon::parse('2026-11-09 12:00:00'));
+        $importer = app(MenuImporter::class);
+        $first = $importer->preview($this->source());
+        $importer->apply($first, $this->source(), $first['digest'], false);
+        $original = DB::table('menu_import_links')
+            ->where('menu_key', 'ALSHAMY-20261109-019')->first();
+
+        $this->travel(1)->days();
+        $second = $importer->preview($this->source());
+        $this->assertSame(
+            'unchanged',
+            collect($second['actions'])->firstWhere('menu_key', 'ALSHAMY-20261109-019')['status']
+        );
+        $importer->apply($second, $this->source(), $second['digest'], false);
+        $repeated = DB::table('menu_import_links')
+            ->where('menu_key', 'ALSHAMY-20261109-019')->first();
+
+        $this->assertSame($original->product_id, $repeated->product_id);
+        $this->assertSame($original->created_at, $repeated->created_at);
+        $this->assertSame($original->updated_at, $repeated->updated_at);
+    }
+
+    public function test_updating_an_addon_preserves_its_original_creation_timestamp(): void
+    {
+        $this->travelTo(\Carbon\Carbon::parse('2026-11-09 12:00:00'));
+        $importer = app(MenuImporter::class);
+        $first = $importer->preview($this->source());
+        $importer->apply($first, $this->source(), $first['digest'], false);
+
+        $key = 'ALSHAMY-20261109-029';
+        $original = DB::table('menu_addons')->where('menu_key', $key)->first();
+        $this->travel(1)->days();
+        DB::table('menu_addons')->where('menu_key', $key)->update(['name' => 'اسم قديم']);
+
+        $plan = $importer->preview($this->source());
+        $this->assertSame('addon_update', collect($plan['actions'])->firstWhere('menu_key', $key)['status']);
+        $importer->apply($plan, $this->source(), $plan['digest'], true);
+        $updated = DB::table('menu_addons')->where('menu_key', $key)->first();
+
+        $this->assertSame($original->name, $updated->name);
+        $this->assertSame($original->created_at, $updated->created_at);
+        $this->assertNotSame($original->updated_at, $updated->updated_at);
+    }
+
+    public function test_direct_service_apply_rejects_a_remote_database_url_override(): void
+    {
+        $importer = app(MenuImporter::class);
+        $plan = $importer->preview($this->source());
+        $originalUrl = config('database.connections.sqlite.url');
+
+        try {
+            // Never connect to this URL; the safety check must reject it before DB writes.
+            config(['database.connections.sqlite.url' => 'mysql://example.invalid/production']);
+
+            try {
+                $importer->apply($plan, $this->source(), $plan['digest'], false);
+                $this->fail('Service import accepted an overridden database URL.');
+            } catch (\LogicException $exception) {
+                $this->assertStringContainsString('SQLite', $exception->getMessage());
+            }
+        } finally {
+            config(['database.connections.sqlite.url' => $originalUrl]);
+        }
+
+        $this->assertSame(0, Product::count());
+        $this->assertSame(0, DB::table('menu_import_links')->count());
+    }
+
+    public function test_direct_service_apply_rejects_a_different_active_sqlite_file(): void
+    {
+        $importer = app(MenuImporter::class);
+        $plan = $importer->preview($this->source());
+        $directory = storage_path('framework/testing');
+        if (! is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        }
+        $file = $directory.DIRECTORY_SEPARATOR.'menu-connection-staging-test-'.bin2hex(random_bytes(6)).'.sqlite';
+        touch($file);
+        $originalDatabase = config('database.connections.sqlite.database');
+
+        try {
+            // The cached live connection remains :memory:. A config-only check
+            // must not mistake this new on-disk file for the connected target.
+            config(['database.connections.sqlite.database' => $file]);
+            try {
+                $importer->apply($plan, $this->source(), $plan['digest'], false);
+                $this->fail('Service import ignored the actual connected SQLite database.');
+            } catch (\LogicException $exception) {
+                $this->assertStringContainsString('active SQLite database', $exception->getMessage());
+            }
+        } finally {
+            config(['database.connections.sqlite.database' => $originalDatabase]);
+            unlink($file);
+        }
+
+        $this->assertSame(0, Product::count());
+    }
+
     public function test_price_change_needs_explicit_approval_and_stale_digest_is_rejected(): void
     {
         $importer = app(MenuImporter::class);

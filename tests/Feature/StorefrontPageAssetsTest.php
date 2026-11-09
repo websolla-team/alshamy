@@ -35,6 +35,34 @@ class StorefrontPageAssetsTest extends TestCase
         $this->assertStringContainsString('main.js', $html);
     }
 
+    public function test_home_does_not_load_unused_storefront_plugin_stylesheets(): void
+    {
+        $html = $this->renderHeadFor('home');
+
+        $this->assertStringContainsString('bootstrap.min.css', $html);
+        $this->assertStringContainsString('alshamy-menu.css', $html);
+        foreach (['animate.css', 'magnific-popup.css', 'meanmenu.css', 'swiper-bundle.min.css', 'nice-select.css'] as $unused) {
+            $this->assertStringNotContainsString($unused, $html);
+        }
+    }
+
+    public function test_legacy_pages_keep_their_existing_plugin_stylesheets(): void
+    {
+        $html = $this->renderHeadFor('contacts');
+
+        foreach (['animate.css', 'magnific-popup.css', 'meanmenu.css', 'swiper-bundle.min.css', 'nice-select.css'] as $existing) {
+            $this->assertStringContainsString($existing, $html);
+        }
+    }
+
+    private function renderHeadFor(string $routeName): string
+    {
+        $route = (new Route('GET', '/', fn () => null))->name($routeName);
+        request()->setRouteResolver(fn () => $route);
+
+        return view('website.layouts.head')->render();
+    }
+
     private function renderScriptsFor(string $routeName): string
     {
         $route = (new Route('GET', '/', fn () => null))->name($routeName);
