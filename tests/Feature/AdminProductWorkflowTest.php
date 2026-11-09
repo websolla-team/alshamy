@@ -297,6 +297,24 @@ class AdminProductWorkflowTest extends TestCase
         Storage::disk('public')->assertExists('images/products/keep.webp');
     }
 
+    public function test_imported_zero_quantity_does_not_claim_stock_is_sold_out(): void
+    {
+        $this->signInAsAdmin();
+        $product = $this->makeProduct($this->makeCategory());
+        $product->variants()->create(['size' => 'فردي', 'quantity' => 0, 'price' => 95]);
+        DB::table('menu_import_links')->insert([
+            'menu_key' => 'ALSHAMY-20261109-TEST-UNKNOWN-STOCK',
+            'product_id' => $product->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $html = app(\App\Http\Controllers\Admin\ProductController::class)->index()->render();
+        $this->assertStringContainsString('data-stock="unknown"', $html);
+        $this->assertStringContainsString('التوفر غير مؤكد', $html);
+        $this->assertStringNotContainsString('نفد المخزون', $html);
+    }
+
     public function test_admin_cannot_delete_product_referenced_by_an_order_detail(): void
     {
         $this->signInAsAdmin();

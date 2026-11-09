@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Menu\MenuCatalog;
 use App\Services\Menu\MenuImporter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,31 @@ class MenuImportTest extends TestCase
     private function source(): string
     {
         return base_path('database/menu/alshamy-2026-11-09.csv');
+    }
+
+    public function test_canonical_menu_accounts_for_all_confirmed_choices_and_ambiguities(): void
+    {
+        $catalog = MenuCatalog::fromCsv($this->source());
+        $confirmed = $catalog->confirmedProducts();
+        $addons = $catalog->confirmedAddons();
+        $review = $catalog->reviewItems();
+
+        $this->assertCount(131, $catalog->items());
+        $this->assertSame(183, $catalog->choiceCount());
+        $this->assertCount(13, $catalog->sections());
+        $this->assertCount(125, $confirmed);
+        $this->assertSame(173, array_sum(array_map(fn ($item) => count($item['choices']), $confirmed)));
+        $this->assertCount(1, $addons);
+        $this->assertCount(2, $addons[0]['choices']);
+        $this->assertCount(5, $review);
+        $this->assertSame(8, array_sum(array_map(fn ($item) => count($item['choices']), $review)));
+        $this->assertSame([
+            'ALSHAMY-20261109-008',
+            'ALSHAMY-20261109-009',
+            'ALSHAMY-20261109-092',
+            'ALSHAMY-20261109-093',
+            'ALSHAMY-20261109-094',
+        ], array_column($review, 'menu_key'));
     }
 
     public function test_preview_is_read_only_and_flags_ambiguous_entries(): void
@@ -37,6 +63,9 @@ class MenuImportTest extends TestCase
         $importer->apply($first, $this->source(), $first['digest'], false);
 
         $this->assertSame(125, Product::count());
+        $this->assertSame(125, DB::table('menu_import_links')->count());
+        $this->assertSame(173, DB::table('variants')->count());
+        $this->assertSame(173, DB::table('variants')->where('quantity', 0)->count());
         $this->assertSame(1, DB::table('menu_addons')->count());
         $this->assertSame(13, Category::count());
         $this->assertSame('وجبات الشامي', Category::orderBy('order_num')->firstOrFail()->getTranslation('title', 'ar'));
@@ -46,6 +75,7 @@ class MenuImportTest extends TestCase
         $second = app(MenuImporter::class)->preview($this->source());
         app(MenuImporter::class)->apply($second, $this->source(), $second['digest'], false);
         $this->assertSame(125, Product::count());
+        $this->assertSame(173, DB::table('variants')->count());
         $this->assertSame(1, DB::table('menu_addons')->count());
     }
 
@@ -84,6 +114,10 @@ class MenuImportTest extends TestCase
         $plan = $importer->preview($this->source());
         $importer->apply($plan, $this->source(), $plan['digest'], false);
         $migration = require database_path('migrations/2026_11_09_210000_create_menu_import_tables.php');
+
+        $migration->up();
+        $this->assertSame(125, DB::table('menu_import_links')->count());
+        $this->assertSame(1, DB::table('menu_addons')->count());
 
         $migration->down();
         $this->assertSame(125, DB::table('menu_import_links')->count());

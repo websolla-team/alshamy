@@ -71,8 +71,10 @@ class MenuLegacyMatchingTest extends TestCase
 
         $this->assertSame(97, Product::count());
         $this->assertSame(131, $plan['counts']['source_items']);
-        $this->assertGreaterThan(40, $plan['counts']['price_change'] + $plan['counts']['link'] + $plan['counts']['unchanged']);
-        $this->assertGreaterThan(7, $plan['counts']['review']);
+        $this->assertSame(50, $plan['counts']['price_change']);
+        $this->assertSame(54, $plan['counts']['create']);
+        $this->assertSame(26, $plan['counts']['review']);
+        $this->assertSame(1, $plan['counts']['addon_create']);
 
         $changed = collect($plan['actions'])->firstWhere('menu_key', 'ALSHAMY-20261109-122');
         $this->assertSame('price_change', $changed['status']);
@@ -83,6 +85,61 @@ class MenuLegacyMatchingTest extends TestCase
             fn (Product $product) => [$product->id => $product->variants->pluck('price', 'size')->all()]
         )->all();
         $this->assertSame($before, $after);
+    }
+
+    public function test_36_unmatched_public_snapshot_products_keep_their_ids_names_and_prices(): void
+    {
+        $this->seedPublicMenuSnapshot();
+        $audit = fopen(base_path('docs/audits/live-menu-matching-2026-11-09.csv'), 'rb');
+        try {
+            $columns = fgetcsv($audit);
+            $columns[0] = ltrim($columns[0], "\xEF\xBB\xBF");
+            $unmatched = [];
+            while (($row = fgetcsv($audit)) !== false) {
+                $entry = array_combine($columns, $row);
+                if ($entry['status'] === 'legacy_unmatched') {
+                    $unmatched[] = $entry;
+                }
+            }
+        } finally {
+            fclose($audit);
+        }
+        $this->assertCount(36, $unmatched);
+
+        $legacy = Product::with(['category', 'variants'])->get();
+        $preserve = [];
+        foreach ($unmatched as $entry) {
+            $existing = $legacy->first(fn (Product $product): bool =>
+                $product->category->getTranslation('title', 'ar', false) === $entry['existing_category']
+                && $product->getTranslation('name', 'ar', false) === $entry['existing_name']);
+            $this->assertNotNull($existing, 'Public snapshot item missing: '.$entry['existing_name']);
+            $preserve[$existing->id] = [
+                'name' => $existing->name,
+                'category_id' => $existing->category_id,
+                'variants' => $existing->variants->map(fn ($variant) => [
+                    'size' => $variant->size, 'price' => (float) $variant->price,
+                    'old_price' => $variant->old_price, 'quantity' => $variant->quantity,
+                ])->all(),
+            ];
+        }
+        $this->assertCount(36, $preserve);
+
+        $importer = app(MenuImporter::class);
+        $source = base_path('database/menu/alshamy-2026-11-09.csv');
+        $plan = $importer->preview($source);
+        $importer->apply($plan, $source, $plan['digest'], true);
+
+        $this->assertSame(151, Product::count());
+        $this->assertSame(13, Category::count(), 'Canonical category aliases must not duplicate legacy sections.');
+        foreach ($preserve as $id => $before) {
+            $product = Product::with('variants')->findOrFail($id);
+            $this->assertSame($before['name'], $product->name);
+            $this->assertSame($before['category_id'], $product->category_id);
+            $this->assertSame($before['variants'], $product->variants->map(fn ($variant) => [
+                'size' => $variant->size, 'price' => (float) $variant->price,
+                'old_price' => $variant->old_price, 'quantity' => $variant->quantity,
+            ])->all());
+        }
     }
 
     public function test_reviewed_legacy_merge_preserves_existing_ids_and_can_be_repeated(): void

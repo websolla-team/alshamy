@@ -54,6 +54,7 @@
 @section('content')
     @php
         $categoryOptions = $products->pluck('category')->filter()->unique('id')->sortBy('title');
+        $importedProductIds = $importedProductIds ?? collect();
     @endphp
 
     <section class="admin-products mt-3 mb-4" dir="rtl" aria-labelledby="products-title">
@@ -86,6 +87,7 @@
                         <option value="">كل الحالات</option>
                         <option value="available">متاح</option>
                         <option value="out">نفد</option>
+                        <option value="unknown">التوفر غير مؤكد</option>
                         <option value="missing">بلا أحجام</option>
                     </select>
                 </div>
@@ -111,7 +113,8 @@
                             @php
                                 $variants = $product->variants;
                                 $stock = (int) $variants->sum('quantity');
-                                $stockStatus = $variants->isEmpty() ? 'missing' : ($stock > 0 ? 'available' : 'out');
+                                $isImported = $importedProductIds->has($product->id);
+                                $stockStatus = $variants->isEmpty() ? 'missing' : ($stock > 0 ? 'available' : ($isImported ? 'unknown' : 'out'));
                                 $imagePath = trim((string) $product->image);
                             @endphp
                             <tr class="ap-product-row"
@@ -141,7 +144,7 @@
                                                 @if ($variant->old_price !== null && (float) $variant->old_price > (float) $variant->price)
                                                     <del class="ap-old-price"><bdi>{{ number_format((float) $variant->old_price, 2) }}</bdi></del>
                                                 @endif
-                                                <small class="ap-stock-note">({{ $variant->quantity > 0 ? 'متاح ' . $variant->quantity : 'نفد' }})</small>
+                                                <small class="ap-stock-note">({{ $variant->quantity > 0 ? 'متاح ' . $variant->quantity : ($isImported ? 'التوفر غير مؤكد' : 'نفد') }})</small>
                                             </div>
                                         @empty
                                             <span class="text-muted">لم تُضف أحجام أو أسعار</span>
@@ -151,6 +154,8 @@
                                 <td>
                                     @if ($stockStatus === 'available')
                                         <span class="ap-pill ap-pill--available">متاح: {{ $stock }}</span>
+                                    @elseif ($stockStatus === 'unknown')
+                                        <span class="ap-pill ap-pill--missing">التوفر غير مؤكد</span>
                                     @elseif ($stockStatus === 'out')
                                         <span class="ap-pill ap-pill--out">نفد المخزون</span>
                                     @else

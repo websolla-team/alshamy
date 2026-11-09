@@ -62,11 +62,17 @@ final class MenuCatalog
                     throw new InvalidArgumentException("Invalid menu identity or choice at row {$line}.");
                 }
 
-                if ($price !== '' && (! is_numeric($price) || (float) $price <= 0)) {
+                // Prices are EGP in DECIMAL(10,2): no exponent notation,
+                // silent rounding or overflow beyond eight integer digits.
+                if ($price !== '' && (! preg_match('/^[0-9]{1,8}(?:\.[0-9]{1,2})?$/D', $price)
+                    || (float) $price <= 0)) {
                     throw new InvalidArgumentException("Invalid price at row {$line}.");
                 }
                 if ($price === '' && $flag !== 'yes') {
                     throw new InvalidArgumentException("Unconfirmed price must be flagged at row {$line}.");
+                }
+                if (trim($row['unparsed_price']) !== '' && $flag !== 'yes') {
+                    throw new InvalidArgumentException("Unparsed price must be flagged for review at row {$line}.");
                 }
 
                 if (! isset($items[$key])) {

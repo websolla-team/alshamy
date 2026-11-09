@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -17,8 +18,11 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with(['category', 'variants'])->orderBy('id', 'desc')->get();
+        $importedProductIds = Schema::hasTable('menu_import_links')
+            ? DB::table('menu_import_links')->pluck('product_id')->flip()
+            : collect();
 
-        return view('admin.products.index', compact('products'));
+        return view('admin.products.index', compact('products', 'importedProductIds'));
     }
 
     public function create()

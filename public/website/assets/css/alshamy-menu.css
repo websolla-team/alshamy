@@ -394,9 +394,6 @@ body { color: var(--alshamy-ink); }
 .alshamy-footer-links a:hover { color: #ebbc80; }
 .alshamy-footer-links a:focus-visible { outline: 3px solid #ebbc80; outline-offset: 3px; }
 
-@media (max-width: 359px) {
-    .alshamy-topbar__place { display: none; }
-}
 @media (min-width: 640px) {
     :root { --alshamy-bar-height: 82px; }
     .alshamy-topbar__inner { gap: 16px; }

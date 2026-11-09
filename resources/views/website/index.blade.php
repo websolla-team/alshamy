@@ -65,13 +65,14 @@
                                             $hasPrice = $firstVariant && (float) $firstVariant->price > 0;
                                             $showOldPrice = $hasPrice && (float) $firstVariant->old_price > (float) $firstVariant->price;
                                             $description = trim(strip_tags(html_entity_decode((string) $product->description)));
+                                            $imagePath = trim((string) $product->image);
                                             $orderMessage = 'السلام عليكم، عايز أطلب ' . $product->name
                                                 . ($firstVariant?->size ? ' - ' . $firstVariant->size : '') . '.';
                                         @endphp
                                         <article class="alshamy-menu-card" data-product-id="{{ $product->id }}">
                                             <div class="alshamy-menu-card__image">
-                                                @if ($product->image)
-                                                    <img src="{{ asset($product->image) }}"
+                                                @if ($imagePath !== '' && $imagePath !== '/')
+                                                    <img src="{{ asset($imagePath) }}"
                                                          alt="{{ $product->name }}" width="88" height="88"
                                                          loading="{{ $index === 0 && $loop->first ? 'eager' : 'lazy' }}"
                                                          @if ($index === 0 && $loop->first) fetchpriority="high" @endif
