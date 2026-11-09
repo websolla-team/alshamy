@@ -112,6 +112,7 @@
                                 $variants = $product->variants;
                                 $stock = (int) $variants->sum('quantity');
                                 $stockStatus = $variants->isEmpty() ? 'missing' : ($stock > 0 ? 'available' : 'out');
+                                $imagePath = trim((string) $product->image);
                             @endphp
                             <tr class="ap-product-row"
                                 data-search="{{ $product->name . ' ' . ($product->category?->title ?? '') . ' ' . $variants->pluck('size')->implode(' ') }}"
@@ -119,8 +120,8 @@
                                 data-stock="{{ $stockStatus }}">
                                 <td>
                                     <div class="ap-product">
-                                        @if ($product->image)
-                                            <img src="{{ asset($product->image) }}" alt="" loading="lazy" width="64" height="64">
+                                        @if ($imagePath !== '' && $imagePath !== '/')
+                                            <img src="{{ asset($imagePath) }}" alt="" loading="lazy" width="64" height="64">
                                         @else
                                             <span class="ap-photo-fallback" aria-hidden="true">الشامي</span>
                                         @endif

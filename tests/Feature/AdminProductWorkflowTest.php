@@ -222,6 +222,40 @@ class AdminProductWorkflowTest extends TestCase
             ->assertDontSee('<img src="http://localhost/"', false);
     }
 
+    public function test_admin_list_does_not_request_the_site_root_for_missing_photo_paths(): void
+    {
+        $this->signInAsAdmin();
+        $category = $this->makeCategory();
+
+        foreach (['', ' ', '/'] as $missingPath) {
+            $this->makeProduct($category)->update(['image' => $missingPath]);
+        }
+        $this->makeProduct($category)->update(['image' => '/logo/logo.png']);
+
+        $html = view('admin.products.index', [
+            'products' => Product::with(['category', 'variants'])->get(),
+        ])->render();
+
+        $this->assertSame(3, substr_count($html, 'class="ap-photo-fallback"'));
+        $this->assertStringNotContainsString('<img src="http://localhost/"', $html);
+        $this->assertStringContainsString('<img src="http://localhost/logo/logo.png"', $html);
+    }
+
+    public function test_admin_layout_guards_optional_scrollbars_and_keeps_desktop_sidebar_script(): void
+    {
+        $this->signInAsAdmin();
+
+        $html = view('admin.products.index', [
+            'products' => collect(),
+        ])->render();
+
+        $this->assertStringNotContainsString('assets/plugins/perfect-scrollbar/p-scroll.js', $html);
+        $this->assertStringContainsString('document.querySelector(selector)', $html);
+        $this->assertStringContainsString('if (element)', $html);
+        $this->assertStringContainsString('new PerfectScrollbar(element', $html);
+        $this->assertStringContainsString('assets/plugins/side-menu/sidemenu.js', $html);
+    }
+
     public function test_cannot_delete_category_that_still_contains_products(): void
     {
         $this->signInAsAdmin();
