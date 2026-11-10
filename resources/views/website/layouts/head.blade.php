@@ -24,7 +24,7 @@
     @endunless
     <!--<< Main.css >>-->
     <link rel="stylesheet" href="{{ asset('website/assets/css/main.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('website/assets/css/alshamy-menu.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('website/assets/css/alshamy-menu.css') }}?v=10">
 
 
 
