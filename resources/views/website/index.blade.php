@@ -70,6 +70,10 @@
                                                 $imagePath = trim((string) $product->image);
                                                 // The dashboard stores this path when no photo was uploaded.
                                                 $hasImage = $imagePath !== '' && $imagePath !== '/' && ! str_contains($imagePath, 'logo/logo.png');
+                                                if (! $hasImage) {
+                                                    $imagePath = config('menu_photos.' . $product->getTranslation('name', 'ar', false), '');
+                                                    $hasImage = $imagePath !== '';
+                                                }
                                                 $orderMessage = 'السلام عليكم، عايز أطلب ' . $product->name
                                                     . ($firstVariant?->size ? ' - ' . $firstVariant->size : '') . '.';
                                                 $searchText = $product->name . ' ' . $product->variants->pluck('size')->implode(' ');
